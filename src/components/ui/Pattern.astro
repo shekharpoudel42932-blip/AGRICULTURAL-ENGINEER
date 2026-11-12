@@ -1,0 +1,55 @@
+---
+/**
+ * Decorative agricultural line patterns used as image placeholders and backgrounds.
+ * Variants: rows (crop rows), contours (terrain), grid (field plots), drops (drip emitters).
+ */
+import { cn } from '@/lib/utils';
+
+interface Props {
+  variant?: 'rows' | 'contours' | 'grid' | 'drops';
+  class?: string;
+  /** Add data-draw so GSAP strokes the lines in on scroll */
+  draw?: boolean;
+}
+const { variant = 'rows', class: className, draw = false } = Astro.props;
+
+const W = 400;
+const H = 300;
+const range = (n: number) => Array.from({ length: n }, (_, i) => i);
+
+let paths: string[] = [];
+let dots: { x: number; y: number }[] = [];
+
+if (variant === 'rows') {
+  paths = range(14).map((i) => {
+    const y = 10 + i * 22;
+    return `M -20 ${y + 30} C 120 ${y - 10}, 260 ${y + 50}, 420 ${y}`;
+  });
+} else if (variant === 'contours') {
+  paths = range(10).map((i) => {
+    const r = 20 + i * 22;
+    return `M ${200 - r * 1.4} 170 C ${200 - r * 1.4} ${170 - r}, ${200 + r * 1.2} ${170 - r * 1.1}, ${200 + r * 1.4} 170 S ${200 - r * 0.6} ${170 + r * 1.1}, ${200 - r * 1.4} 170`;
+  });
+} else if (variant === 'grid') {
+  paths = [
+    ...range(9).map((i) => `M ${i * 50} 0 L ${i * 50 + 30} ${H}`),
+    ...range(7).map((i) => `M 0 ${i * 50} L ${W} ${i * 50 - 20}`),
+  ];
+} else {
+  paths = range(7).map((i) => `M 0 ${30 + i * 42} L ${W} ${30 + i * 42}`);
+  dots = range(7).flatMap((r) => range(10).map((c) => ({ x: 20 + c * 40 + (r % 2) * 20, y: 30 + r * 42 })));
+}
+---
+
+<svg
+  viewBox={`0 0 ${W} ${H}`}
+  preserveAspectRatio="xMidYMid slice"
+  class={cn('size-full', className)}
+  fill="none"
+  stroke="currentColor"
+  aria-hidden="true"
+  data-draw={draw ? '' : undefined}
+>
+  {paths.map((d) => <path d={d} stroke-width="1" vector-effect="non-scaling-stroke" />)}
+  {dots.map((p) => <circle cx={p.x} cy={p.y} r="3" fill="currentColor" stroke="none" />)}
+</svg>

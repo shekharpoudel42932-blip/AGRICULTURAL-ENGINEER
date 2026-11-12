@@ -1,0 +1,41 @@
+---
+/**
+ * Page-level image viewer. Any <a data-lightbox href="full.jpg" data-caption="…"> opens here.
+ * Optional: data-lightbox-group (step through siblings with ←/→), data-download (+ data-download-name).
+ * Behaviour: scripts/lightbox.ts
+ */
+import Icon from '@/components/ui/Icon.astro';
+
+const roundBtn = 'grid size-11 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20';
+---
+
+<dialog
+  class="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden bg-transparent p-0 backdrop:bg-transparent"
+  aria-label="Image viewer"
+  data-lightbox-dialog
+>
+  <div class="absolute inset-0 bg-black/85" data-lightbox-bg></div>
+  <figure class="pointer-events-none relative flex size-full flex-col items-center justify-center gap-4 p-4 md:p-10" data-lightbox-figure>
+    <img class="pointer-events-auto max-h-[78svh] w-auto max-w-full rounded-lg bg-white object-contain shadow-2xl" alt="" data-lightbox-img />
+    <figcaption class="flex max-w-3xl flex-col items-center gap-1 text-center text-sm text-white/80">
+      <span data-lightbox-caption></span>
+      <span class="text-xs text-white/50 tabular-nums" data-lightbox-counter hidden></span>
+    </figcaption>
+  </figure>
+
+  <div class="absolute top-4 right-4 flex gap-2 lg:top-8 lg:right-8" data-lightbox-toolbar>
+    <a class={roundBtn} href="#" download aria-label="Download image" title="Download original" data-lightbox-download data-astro-prefetch="false" data-sound="click" hidden>
+      <Icon name="download" class="size-5" />
+    </a>
+    <button type="button" class={roundBtn} aria-label="Close image" data-lightbox-close data-sound="click">
+      <Icon name="x" class="size-5" />
+    </button>
+  </div>
+
+  <button type="button" class:list={[roundBtn, 'absolute top-1/2 left-3 -translate-y-1/2 lg:left-8']} aria-label="Previous image" data-lightbox-prev data-sound="click" hidden>
+    <Icon name="chevron-left" class="size-5" />
+  </button>
+  <button type="button" class:list={[roundBtn, 'absolute top-1/2 right-3 -translate-y-1/2 lg:right-8']} aria-label="Next image" data-lightbox-next data-sound="click" hidden>
+    <Icon name="chevron-right" class="size-5" />
+  </button>
+</dialog>

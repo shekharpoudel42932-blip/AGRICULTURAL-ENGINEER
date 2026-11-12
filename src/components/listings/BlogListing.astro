@@ -1,0 +1,57 @@
+---
+/** Paginated blog list, shared by /blog/[...page] and /blog/tags/[tag]/[...page]. */
+import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import PageHeader from '@/components/ui/PageHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import FilterChips from '@/components/ui/FilterChips.astro';
+import Pagination from '@/components/ui/Pagination.astro';
+import PostCard from '@/components/cards/PostCard.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+import type { TagCount } from '@/lib/content';
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+  baseUrl: string;
+  tags: TagCount[];
+  totalPosts: number;
+  activeTag?: TagCount;
+}
+const { page, baseUrl, tags, totalPosts, activeTag } = Astro.props;
+
+const chips = [
+  { label: 'All', href: '/blog', count: totalPosts, active: !activeTag },
+  ...tags.map((t) => ({ label: t.label, href: `/blog/tags/${t.slug}`, count: t.count, active: t.slug === activeTag?.slug })),
+];
+---
+
+<PageHeader
+  eyebrow={activeTag ? `Journal · #${activeTag.label}` : `Journal${page.lastPage > 1 ? ` · Page ${page.currentPage} of ${page.lastPage}` : ''}`}
+  title={activeTag ? `#${activeTag.label}` : 'Notes from the field'}
+  description={activeTag
+    ? `${activeTag.count} post${activeTag.count === 1 ? '' : 's'} tagged “${activeTag.label}”.`
+    : 'Field notes, research explainers and lessons learned from building things for farms.'}
+>
+  <FilterChips items={chips} />
+</PageHeader>
+
+<Section class="pt-0 md:pt-0">
+  {
+    page.data.length > 0 ? (
+      <>
+        <div data-stagger>
+          {page.data.map((post) => <PostCard post={post} layout="row" />)}
+        </div>
+        <Pagination page={page} baseUrl={baseUrl} label="posts" />
+      </>
+    ) : (
+      <EmptyState
+        icon="book"
+        pattern="contours"
+        title="No posts yet"
+        description="Field notes and write-ups will appear here once the first one is published."
+        action={{ label: 'Back to home', href: '/' }}
+      />
+    )
+  }
+</Section>

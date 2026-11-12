@@ -1,0 +1,30 @@
+---
+/** Infinite horizontal ticker. Items are duplicated once so GSAP can loop xPercent 0 → -50. */
+import { cn } from '@/lib/utils';
+
+interface Props {
+  items: readonly string[];
+  class?: string;
+  /** seconds for one full loop */
+  speed?: number;
+  reverse?: boolean;
+}
+const { items, class: className, speed = 40, reverse = false } = Astro.props;
+---
+
+<div class={cn('relative flex overflow-hidden py-6 select-none', className)} data-marquee={speed} data-marquee-reverse={reverse ? '' : undefined}>
+  <div class="flex shrink-0 items-center whitespace-nowrap" data-marquee-track>
+    {
+      [0, 1].map((copy) =>
+        items.map((item) => (
+          <span class="flex items-center" aria-hidden={copy === 1 ? 'true' : undefined}>
+            <span class="px-6 font-display text-3xl md:text-5xl">{item}</span>
+            <svg viewBox="0 0 24 24" class="size-5 text-accent md:size-7" fill="currentColor" aria-hidden="true">
+              <path d="M12 2c.6 4.8 2.7 7.4 8 8-5.3.6-7.4 3.2-8 8-.6-4.8-2.7-7.4-8-8 5.3-.6 7.4-3.2 8-8Z" />
+            </svg>
+          </span>
+        )),
+      )
+    }
+  </div>
+</div>

@@ -1,0 +1,88 @@
+---
+/**
+ * Image gallery for posts and projects. Each thumbnail opens the lightbox, which can step through
+ * the whole gallery (←/→) and download the original file.
+ */
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import Icon from '@/components/ui/Icon.astro';
+import CoverImage from '@/components/ui/CoverImage.astro';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  items: { src: ImageMetadata | string; alt?: string; caption?: string }[];
+  /** Used for the heading id and to group images in the lightbox */
+  id?: string;
+  title?: string;
+  class?: string;
+}
+const { items, id = 'gallery', title = 'Gallery', class: className } = Astro.props;
+
+const images = await Promise.all(
+  items.map(async (item, i) => {
+    const remote = typeof item.src === 'string';
+    const src = item.src;
+    const full = typeof src === 'string' ? src : (await getImage({ src, width: Math.min(2000, src.width), format: 'webp' })).src;
+    // The untouched original, for downloading
+    const original = typeof src === 'string' ? src : src.src;
+    const ext = (original.split(/[?#]/)[0].split('.').pop() ?? 'jpg').toLowerCase();
+    const label = item.alt || item.caption || `${title} image ${i + 1}`;
+    const downloadName = `${id}-${String(i + 1).padStart(2, '0')}.${ext}`;
+    return { ...item, full, original, remote, label, downloadName };
+  }),
+);
+---
+
+{
+  images.length > 0 && (
+    <section class={cn('not-prose', className)} aria-labelledby={`${id}-heading`}>
+      <div class="mb-6 flex items-end justify-between gap-4 border-b border-border pb-4">
+        <h2 id={`${id}-heading`} class="flex items-center gap-2 font-display text-2xl font-medium">
+          <Icon name="image" class="size-5 text-primary" /> {title}
+        </h2>
+        <span class="text-sm text-muted-foreground tabular-nums">
+          {images.length} image{images.length === 1 ? '' : 's'}
+        </span>
+      </div>
+
+      <ul class="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4" data-stagger>
+        {images.map((img, i) => (
+          <li class="group relative">
+            <figure>
+              <a
+                href={img.full}
+                class="relative block cursor-zoom-in overflow-hidden rounded-xl border border-border"
+                aria-label={`View image ${i + 1} of ${images.length}: ${img.label}`}
+                data-lightbox
+                data-lightbox-group={id}
+                data-caption={img.caption ?? img.alt ?? ''}
+                data-download={img.original}
+                data-download-name={img.downloadName}
+                data-sound="click"
+              >
+                <CoverImage src={img.src} alt={img.alt ?? ''} class="aspect-[4/3] bg-muted" sizes="(min-width: 768px) 30vw, 50vw" widths={[400, 700]} zoom />
+                <span class="absolute right-2 bottom-2 grid size-8 place-items-center rounded-full bg-foreground/80 text-background opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <Icon name="maximize" class="size-3.5" />
+                </span>
+              </a>
+              {img.caption && <figcaption class="mt-2 text-xs leading-snug text-muted-foreground">{img.caption}</figcaption>}
+            </figure>
+            <a
+              href={img.original}
+              download={img.remote ? undefined : img.downloadName}
+              target={img.remote ? '_blank' : undefined}
+              rel={img.remote ? 'noopener noreferrer' : undefined}
+              class="absolute top-2 right-2 grid size-8 place-items-center rounded-full bg-background/90 text-foreground opacity-0 shadow-sm transition-opacity duration-300 group-hover:opacity-100 focus-visible:opacity-100"
+              aria-label={`Download image ${i + 1}`}
+              title="Download original"
+              data-astro-prefetch="false"
+              data-sound="click"
+            >
+              <Icon name="download" class="size-4" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

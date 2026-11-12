@@ -1,0 +1,38 @@
+---
+import { getProjects } from '@/lib/content';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import ProjectCard from '@/components/cards/ProjectCard.astro';
+import { cn } from '@/lib/utils';
+import EmptyState from '@/components/ui/EmptyState.astro';
+
+interface Props {
+  limit?: number;
+}
+const { limit = 4 } = Astro.props;
+const featured = await getProjects({ featured: true });
+const projects = (featured.length ? featured : await getProjects()).slice(0, limit);
+// Every second card is nudged down 4rem (md:translate-y-16). When the last row holds a nudged card
+// (an even count), reserve that space so the next section keeps the normal gap. Cards are h-full so a
+// row's cards share one height and the nudged card is always the lowest.
+const gridClass = cn('grid gap-6 md:grid-cols-2', projects.length > 1 && projects.length % 2 === 0 && 'md:pb-16');
+---
+
+<Section>
+  <SectionHeading
+    index="02"
+    eyebrow="Selected projects"
+    title="Work in the field"
+    description="Irrigation, sensing, machinery and post-harvest projects, each measured by its impact on the farm."
+    link={{ label: 'All projects', href: '/projects' }}
+  />
+  {
+    projects.length > 0 ? (
+      <div class={gridClass} data-stagger>
+        {projects.map((project, i) => <ProjectCard project={project} index={i} class={cn('h-full', i % 2 === 1 && 'md:translate-y-16')} />)}
+      </div>
+    ) : (
+      <EmptyState compact icon="sprout" pattern="rows" title="Projects are on the way" description="Case studies from the field will be shared here soon." />
+    )
+  }
+</Section>

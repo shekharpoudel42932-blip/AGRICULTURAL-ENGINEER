@@ -1,0 +1,78 @@
+---
+import { site } from '@/config/site';
+import Container from '@/components/ui/Container.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+// Curved "crop rows" drawn in on load
+const rows = Array.from({ length: 18 }, (_, i) => {
+  const y = 60 + i * 48;
+  return `M -100 ${y + 80} C 400 ${y - 60}, 900 ${y + 140}, 1600 ${y - 20}`;
+});
+---
+
+<section class="relative flex min-h-svh flex-col justify-end overflow-hidden pt-32 pb-20 md:pb-24">
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="absolute -top-1/4 -right-1/4 size-[70vmax] rounded-full bg-accent/20 blur-3xl dark:bg-accent/10"></div>
+    <div class="absolute -bottom-1/3 -left-1/4 size-[60vmax] rounded-full bg-primary/15 blur-3xl"></div>
+    <svg
+      viewBox="0 0 1500 900"
+      preserveAspectRatio="xMidYMid slice"
+      class="absolute inset-0 size-full text-primary/25"
+      fill="none"
+      stroke="currentColor"
+      data-draw="load"
+      data-parallax="0.25"
+    >
+      {rows.map((d) => <path d={d} stroke-width="1.2" vector-effect="non-scaling-stroke" />)}
+    </svg>
+  </div>
+
+  <Container>
+    <p class="eyebrow mb-6 flex items-center gap-3" data-reveal="fade">
+      <Icon name="sprout" class="size-4 text-primary" />
+      {site.role} · {site.location}
+    </p>
+
+    <h1 class="font-display text-display leading-[0.85] font-medium tracking-tighter" data-split="chars">
+      {site.name}<span class="text-accent">.</span>
+    </h1>
+
+    <div class="mt-10 grid gap-8 md:mt-14 md:grid-cols-12 md:items-end">
+      <p class="font-display text-2xl leading-tight text-balance md:col-span-7 md:text-4xl" data-reveal data-delay="0.3">
+        {site.tagline}
+      </p>
+      <div class="flex flex-col gap-6 md:col-span-5 md:items-end md:text-right" data-reveal data-delay="0.45">
+        <p class="max-w-sm text-muted-foreground">{site.description}</p>
+        <div class="flex flex-wrap gap-3">
+          <Button href="/projects">View projects <Icon name="arrow-right" class="size-4" /></Button>
+          <Button href="/contact" variant="outline">Get in touch</Button>
+        </div>
+      </div>
+    </div>
+
+    <a
+      href="#about"
+      class="mt-16 hidden items-center gap-3 text-xs tracking-[0.18em] text-muted-foreground uppercase md:inline-flex"
+      data-reveal="fade"
+      data-delay="0.8"
+      data-sound="hover"
+    >
+      <span class="relative h-10 w-px overflow-hidden bg-border">
+        <span class="absolute inset-x-0 top-0 h-1/2 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-foreground"></span>
+      </span>
+      Scroll to explore
+    </a>
+  </Container>
+</section>
+
+<style>
+  @keyframes scrollcue {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(200%);
+    }
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+import { cn, slugify } from '@/lib/utils';
+
+interface Props {
+  label: string;
+  /** If set, the tag links to `${base}/<slug>` */
+  linked?: boolean;
+  /** Tag index route, e.g. "/blog/tags" (default) or "/projects/tags" */
+  base?: string;
+  class?: string;
+}
+const { label, linked = false, base = '/blog/tags', class: className } = Astro.props;
+const classes = cn(
+  'inline-flex items-center rounded-full border border-border px-3 py-1 text-xs text-muted-foreground transition-colors',
+  linked && 'hover:border-primary hover:text-primary',
+  className,
+);
+---
+
+{
+  linked ? (
+    <a href={`${base}/${slugify(label)}`} class={classes} data-sound="hover">
+      #{label}
+    </a>
+  ) : (
+    <span class={classes}>{label}</span>
+  )
+}

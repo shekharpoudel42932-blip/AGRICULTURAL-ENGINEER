@@ -1,0 +1,20 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { cn } from '@/lib/utils';
+
+type Variant = 'default' | 'outline' | 'primary' | 'accent';
+interface Props extends HTMLAttributes<'span'> {
+  variant?: Variant;
+}
+const { variant = 'default', class: className, ...rest } = Astro.props;
+const variants: Record<Variant, string> = {
+  default: 'bg-muted text-muted-foreground',
+  outline: 'border border-border text-muted-foreground',
+  primary: 'bg-primary/10 text-primary',
+  accent: 'bg-accent/25 text-accent-foreground dark:text-accent',
+};
+---
+
+<span class={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', variants[variant], className)} {...rest}>
+  <slot />
+</span>

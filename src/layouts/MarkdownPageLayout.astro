@@ -1,0 +1,121 @@
+---
+/**
+ * Layout for stand-alone markdown pages (src/content/pages/*.md).
+ * Mirrors the project detail page: header → wide cover → sticky sidebar (facts +
+ * chapter list from ## headings) beside the prose.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import CoverImage from '@/components/ui/CoverImage.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import { ogImageFor } from '@/lib/og';
+import { formatDate } from '@/lib/utils';
+
+interface Props {
+  entry: CollectionEntry<'pages'>;
+}
+const { entry } = Astro.props;
+const { title, eyebrow, description, cover, coverAlt, facts, toc, updated } = entry.data;
+const { Content, headings } = await render(entry);
+const chapters = toc ? headings.filter((h) => h.depth === 2) : [];
+const ogImage = await ogImageFor(cover);
+---
+
+<BaseLayout title={title} description={description} image={ogImage}>
+  <div class="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-accent" data-progress aria-hidden="true"></div>
+
+  <article>
+    <header class="pt-36 pb-12 md:pt-48">
+      <Container>
+        {eyebrow && <p class="eyebrow mb-6" data-reveal="fade">{eyebrow}</p>}
+        <h1 class="max-w-5xl text-5xl leading-[0.95] font-medium text-balance md:text-8xl" data-split>{title}</h1>
+        <p class="mt-8 max-w-2xl text-xl text-muted-foreground" data-reveal>{description}</p>
+      </Container>
+    </header>
+
+    <Container>
+      {
+        cover && (
+          <div data-reveal="scale">
+            <CoverImage src={cover} alt={coverAlt ?? title} class="aspect-[16/8] rounded-2xl" sizes="(min-width: 1280px) 1200px, 100vw" priority />
+          </div>
+        )
+      }
+
+      <div class="mt-16 mb-24 grid gap-12 md:grid-cols-12">
+        <aside class="md:col-span-4">
+          <div class="space-y-10 md:sticky md:top-28">
+            {
+              facts.length > 0 && (
+                <dl class="divide-y divide-border border-y border-border" data-stagger>
+                  {facts.map((f) => (
+                    <div class="flex justify-between gap-4 py-4 text-sm">
+                      <dt class="text-muted-foreground">{f.label}</dt>
+                      <dd class="text-right font-medium">{f.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )
+            }
+            {
+              chapters.length > 0 && (
+                <nav aria-label="Chapters" class="hidden md:block" data-reveal="fade">
+                  <p class="eyebrow mb-4">Chapters</p>
+                  <ol class="space-y-1 border-l border-border" data-toc>
+                    {chapters.map((h, i) => (
+                      <li>
+                        <a
+                          href={`#${h.slug}`}
+                          class="-ml-px flex gap-3 border-l-2 border-transparent py-1.5 pl-4 text-sm text-muted-foreground transition-colors hover:text-foreground aria-[current=true]:border-primary aria-[current=true]:text-foreground"
+                          data-toc-link={h.slug}
+                          data-sound="hover"
+                        >
+                          <span class="tabular-nums opacity-60">{String(i + 1).padStart(2, '0')}</span>
+                          {h.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              )
+            }
+            {updated && <p class="text-xs text-muted-foreground">Last updated {formatDate(updated)}</p>}
+          </div>
+        </aside>
+
+        <div class="md:col-span-8">
+          <div
+            class="prose prose-lg prose-field max-w-none prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-medium prose-blockquote:font-display prose-blockquote:text-2xl prose-blockquote:leading-snug prose-blockquote:font-normal prose-blockquote:not-italic md:prose-xl"
+            data-reveal
+          >
+            <Content />
+          </div>
+        </div>
+      </div>
+    </Container>
+  </article>
+
+  <ContactCTA />
+</BaseLayout>
+
+<script>
+  // Highlight the chapter currently in view
+  document.addEventListener('astro:page-load', () => {
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+    if (!links.length) return;
+    const headings = links.map((l) => document.getElementById(l.dataset.tocLink!)).filter((h): h is HTMLElement => !!h);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          links.forEach((l) => l.setAttribute('aria-current', String(l.dataset.tocLink === e.target.id)));
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px' },
+    );
+    headings.forEach((h) => observer.observe(h));
+    document.addEventListener('astro:before-swap', () => observer.disconnect(), { once: true });
+  });
+</script>

@@ -1,0 +1,10 @@
+---
+import { getEntry } from 'astro:content';
+import MarkdownPageLayout from '@/layouts/MarkdownPageLayout.astro';
+
+// Edit the story in src/content/pages/self-drive.md
+const entry = await getEntry('pages', 'self-drive');
+if (!entry) throw new Error('Missing src/content/pages/self-drive.md');
+---
+
+<MarkdownPageLayout entry={entry} />

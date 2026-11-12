@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cropwat-hill-nepal",
+    "title": "Estimation of Crop Water and Irrigation Requirement for Major Cereal Crops and Vegetables Using FAO CROPWAT 8.0 Model in the Hill Region of Nepal",
+    "authors": ["Shekhar Poudel"],
+    "venue": "Research report, Nepal Agrotech Solution Pvt. Ltd.",
+    "year": 2025,
+    "type": "report",
+    "abstract": "Estimates the crop water requirement (CWR) and irrigation requirement (IR) of paddy, maize, wheat, potato and cauliflower in Nepal's hill region using the CROPWAT 8.0 model."
+  },
+  {
+    "id": "solar-pv-universities",
+    "title": "Optimizing Solar PV Deployment in Nepalese Universities: Techno-economic and Environmental Comparison of Fixed and Seasonal Tilt Systems",
+    "authors": ["Shekhar Poudel"],
+    "venue": "B.E. undergraduate research, Purwanchal Engineering Campus, IOE",
+    "year": 2023,
+    "type": "thesis",
+    "abstract": "Shows that institutional rooftop PV can cost-effectively move universities toward energy independence, cutting reliance on diesel generators during outages and reducing emissions, with scalable insights for institutions in developing countries."
+  }
+]

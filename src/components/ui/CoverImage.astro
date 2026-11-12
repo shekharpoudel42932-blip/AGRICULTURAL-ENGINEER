@@ -1,0 +1,72 @@
+---
+/**
+ * Responsive cover image used by project + blog cards and detail pages.
+ *  - local images (ImageMetadata) are optimised by astro:assets (webp, srcset)
+ *  - remote URLs are rendered as a plain lazy <img>
+ *  - no cover → decorative line pattern fallback
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import { cn } from '@/lib/utils';
+import Pattern from './Pattern.astro';
+
+export type Cover = ImageMetadata | string | undefined;
+
+interface Props {
+  src: Cover;
+  alt: string;
+  /** Pattern used when there is no image */
+  pattern?: 'rows' | 'contours' | 'grid' | 'drops';
+  /** Classes for the wrapper (set aspect ratio / rounding here) */
+  class?: string;
+  /** Classes for the <img> itself */
+  imgClass?: string;
+  sizes?: string;
+  widths?: number[];
+  /** Above-the-fold images should load eagerly */
+  priority?: boolean;
+  /** Adds data-card-media so the parent card can zoom it on hover */
+  zoom?: boolean;
+}
+
+const {
+  src,
+  alt,
+  pattern = 'rows',
+  class: className,
+  imgClass,
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  widths = [480, 800, 1200, 1600],
+  priority = false,
+  zoom = false,
+} = Astro.props;
+
+const imgClasses = cn('size-full object-cover', imgClass);
+const loading = priority ? 'eager' : 'lazy';
+---
+
+<div class={cn('relative overflow-hidden bg-primary/10 text-primary', className)}>
+  <div
+    class={cn('size-full', zoom && 'transition-transform duration-700 ease-out-expo group-hover:scale-[1.04]')}
+    data-card-media={zoom ? '' : undefined}
+  >
+    {
+      typeof src === 'string' ? (
+        <img src={src} alt={alt} class={imgClasses} loading={loading} decoding="async" />
+      ) : src ? (
+        <Image
+          src={src}
+          alt={alt}
+          class={imgClasses}
+          widths={widths.filter((w) => w <= src.width)}
+          sizes={sizes}
+          loading={loading}
+          fetchpriority={priority ? 'high' : undefined}
+        />
+      ) : (
+        <Pattern variant={pattern} class="opacity-60" />
+      )
+    }
+  </div>
+  <slot />
+</div>

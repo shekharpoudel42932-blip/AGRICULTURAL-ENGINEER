@@ -1,0 +1,18 @@
+---
+/** Vertical timeline wrapper. The coloured line "draws" itself on scroll (data-draw-line). */
+import { cn } from '@/lib/utils';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div class={cn('relative', className)}>
+  <span class="absolute top-0 bottom-0 left-5 w-px bg-border md:left-1/4" aria-hidden="true">
+    <span class="block h-full w-full origin-top bg-primary" data-draw-line></span>
+  </span>
+  <ol class="relative">
+    <slot />
+  </ol>
+</div>

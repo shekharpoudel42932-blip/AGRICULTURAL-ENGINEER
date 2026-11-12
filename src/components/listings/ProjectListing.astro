@@ -1,0 +1,60 @@
+---
+/** Paginated project grid, shared by /projects/[...page] and /projects/tags/[tag]/[...page]. */
+import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import PageHeader from '@/components/ui/PageHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import FilterChips from '@/components/ui/FilterChips.astro';
+import Pagination from '@/components/ui/Pagination.astro';
+import ProjectCard from '@/components/cards/ProjectCard.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import type { TagCount } from '@/lib/content';
+
+interface Props {
+  page: Page<CollectionEntry<'projects'>>;
+  baseUrl: string;
+  tags: TagCount[];
+  totalProjects: number;
+  activeTag?: TagCount;
+}
+const { page, baseUrl, tags, totalProjects, activeTag } = Astro.props;
+
+const chips = [
+  { label: 'All', href: '/projects', count: totalProjects, active: !activeTag },
+  ...tags.map((t) => ({ label: t.label, href: `/projects/tags/${t.slug}`, count: t.count, active: t.slug === activeTag?.slug })),
+];
+---
+
+<PageHeader
+  eyebrow={`Projects · ${activeTag ? activeTag.label : `${totalProjects} total`}${page.lastPage > 1 ? ` · Page ${page.currentPage} of ${page.lastPage}` : ''}`}
+  title={activeTag ? activeTag.label : 'Engineering for the field.'}
+  description={activeTag
+    ? `${activeTag.count} project${activeTag.count === 1 ? '' : 's'} in ${activeTag.label.toLowerCase()}.`
+    : 'A selection of design, research and commissioning work from irrigation networks to farm machinery.'}
+>
+  <FilterChips items={chips} />
+</PageHeader>
+
+<Section class="pt-0 md:pt-0">
+  {
+    page.data.length > 0 ? (
+      <>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-stagger>
+          {page.data.map((project, i) => <ProjectCard project={project} index={page.start + i} class="h-full" />)}
+        </div>
+        <Pagination page={page} baseUrl={baseUrl} label="projects" />
+      </>
+    ) : (
+      <EmptyState
+        icon="sprout"
+        pattern="rows"
+        title="Projects are on the way"
+        description="Case studies from the field are being written up. Check back soon."
+        action={{ label: 'Back to home', href: '/' }}
+      />
+    )
+  }
+</Section>
+
+<ContactCTA />

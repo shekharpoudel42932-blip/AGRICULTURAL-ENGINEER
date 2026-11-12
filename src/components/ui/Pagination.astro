@@ -1,0 +1,90 @@
+---
+/**
+ * Numbered pagination for Astro's paginate() pages.
+ * Shows first/last, a window around the current page and ellipses in between.
+ */
+import type { Page } from 'astro';
+import { cn } from '@/lib/utils';
+import Icon from './Icon.astro';
+
+interface Props {
+  page: Page<unknown>;
+  /** URL of page 1, e.g. "/blog" or "/blog/tags/irrigation" */
+  baseUrl: string;
+  /** Noun used in the summary line ("posts", "projects") */
+  label?: string;
+  class?: string;
+}
+
+const { page, baseUrl, label = 'items', class: className } = Astro.props;
+const { currentPage: current, lastPage: last } = page;
+const urlFor = (n: number) => (n === 1 ? baseUrl : `${baseUrl}/${n}`);
+
+const items: (number | 'gap')[] = [];
+for (let n = 1; n <= last; n++) {
+  if (n === 1 || n === last || Math.abs(n - current) <= 1) items.push(n);
+  else if (items.at(-1) !== 'gap') items.push('gap');
+}
+
+const btn = 'inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border px-4 text-sm font-medium transition-colors';
+---
+
+{
+  last > 1 && (
+    <nav aria-label="Pagination" class={cn('mt-16 flex flex-col items-center gap-6 border-t border-border pt-10 md:flex-row md:justify-between', className)}>
+      <p class="order-2 text-sm text-muted-foreground md:order-1">
+        Showing <span class="text-foreground tabular-nums">{page.start + 1}–{page.end + 1}</span> of{' '}
+        <span class="text-foreground tabular-nums">{page.total}</span> {label}
+      </p>
+
+      <div class="order-1 flex items-center gap-2 md:order-2">
+        {page.url.prev ? (
+          <a href={page.url.prev} rel="prev" class={cn(btn, 'hover:border-foreground/40 hover:bg-foreground/5')} data-sound="click" aria-label="Previous page">
+            <Icon name="arrow-left" class="size-4" />
+            <span class="hidden sm:inline">Prev</span>
+          </a>
+        ) : (
+          <span class={cn(btn, 'pointer-events-none opacity-40')} aria-hidden="true">
+            <Icon name="arrow-left" class="size-4" />
+            <span class="hidden sm:inline">Prev</span>
+          </span>
+        )}
+
+        <ol class="flex items-center gap-1">
+          {items.map((n) =>
+            n === 'gap' ? (
+              <li class="grid size-11 place-items-center text-muted-foreground" aria-hidden="true">…</li>
+            ) : (
+              <li>
+                <a
+                  href={urlFor(n)}
+                  class={cn(
+                    'grid size-11 place-items-center rounded-full text-sm tabular-nums transition-colors',
+                    n === current ? 'bg-foreground text-background' : 'hover:bg-foreground/5',
+                  )}
+                  aria-current={n === current ? 'page' : undefined}
+                  aria-label={`Page ${n}`}
+                  data-sound="click"
+                >
+                  {n}
+                </a>
+              </li>
+            ),
+          )}
+        </ol>
+
+        {page.url.next ? (
+          <a href={page.url.next} rel="next" class={cn(btn, 'hover:border-foreground/40 hover:bg-foreground/5')} data-sound="click" aria-label="Next page">
+            <span class="hidden sm:inline">Next</span>
+            <Icon name="arrow-right" class="size-4" />
+          </a>
+        ) : (
+          <span class={cn(btn, 'pointer-events-none opacity-40')} aria-hidden="true">
+            <span class="hidden sm:inline">Next</span>
+            <Icon name="arrow-right" class="size-4" />
+          </span>
+        )}
+      </div>
+    </nav>
+  )
+}

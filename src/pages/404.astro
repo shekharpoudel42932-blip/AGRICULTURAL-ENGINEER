@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Button from '@/components/ui/Button.astro';
+import Pattern from '@/components/ui/Pattern.astro';
+---
+
+<BaseLayout title="Not found">
+  <section class="relative flex min-h-svh items-center overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 text-primary/15"><Pattern variant="rows" draw /></div>
+    <Container class="relative">
+      <p class="eyebrow mb-6" data-reveal="fade">Error 404</p>
+      <h1 class="text-display leading-[0.85] font-medium" data-split="chars">Fallow.</h1>
+      <p class="mt-8 max-w-md text-lg text-muted-foreground" data-reveal>Nothing is growing on this plot. The page may have moved or never existed.</p>
+      <div class="mt-10" data-reveal><Button href="/">Back to home</Button></div>
+    </Container>
+  </section>
+</BaseLayout>

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/ui/PageHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Timeline from '@/components/ui/Timeline.astro';
+import TimelineItem from '@/components/cards/TimelineItem.astro';
+import Certifications from '@/components/sections/Certifications.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import { getEducation, getExperience } from '@/lib/content';
+
+const [education, experience] = await Promise.all([getEducation(), getExperience()]);
+---
+
+<BaseLayout title="Education & Experience" description="Academic background and professional experience.">
+  <PageHeader
+    eyebrow="Education & experience"
+    title="Grounded in the lab and the field."
+    description="Formal training in soil & water and farm power engineering, sharpened by years of commissioning real systems."
+  />
+
+  <Section class="pt-0 md:pt-0">
+    <SectionHeading index="01" eyebrow="Education" title="Degrees" />
+    <Timeline>
+      {
+        education.map(({ data }) => (
+          <TimelineItem
+            title={data.degree}
+            subtitle={data.institution}
+            start={data.start}
+            end={data.end}
+            meta={[data.grade, data.location].filter(Boolean).join(' · ')}
+            summary={data.summary}
+            highlights={data.highlights}
+            icon="graduation"
+          />
+        ))
+      }
+    </Timeline>
+  </Section>
+
+  <Section class="bg-card">
+    <SectionHeading index="02" eyebrow="Experience" title="Professional work" />
+    <Timeline>
+      {
+        experience.map(({ data }) => (
+          <TimelineItem
+            title={data.role}
+            subtitle={data.organization}
+            start={data.start}
+            end={data.end}
+            meta={data.location}
+            summary={data.summary}
+            highlights={data.highlights}
+            icon="briefcase"
+          />
+        ))
+      }
+    </Timeline>
+  </Section>
+
+  <Certifications index="03" />
+
+  <ContactCTA />
+</BaseLayout>

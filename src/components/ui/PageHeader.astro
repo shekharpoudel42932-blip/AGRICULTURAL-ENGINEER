@@ -1,0 +1,19 @@
+---
+import Container from './Container.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  description?: string;
+}
+const { eyebrow, title, description } = Astro.props;
+---
+
+<header class="relative overflow-hidden pt-36 pb-16 md:pt-48 md:pb-24">
+  <Container>
+    <p class="eyebrow mb-6" data-reveal="fade">{eyebrow}</p>
+    <h1 class="max-w-5xl text-5xl leading-[0.95] font-medium md:text-8xl" data-split>{title}</h1>
+    {description && <p class="mt-8 max-w-2xl text-lg text-muted-foreground md:text-xl" data-reveal>{description}</p>}
+    <slot />
+  </Container>
+</header>

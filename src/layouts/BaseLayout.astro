@@ -1,0 +1,90 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/fraunces';
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { site } from '@/config/site';
+import Header from '@/components/layout/Header.astro';
+import MenuNav from '@/components/layout/MenuNav.astro';
+import Footer from '@/components/layout/Footer.astro';
+import Lightbox from '@/components/layout/Lightbox.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const { title, description = site.description, image = '/og.png', type = 'website' } = Astro.props;
+const pageTitle = title ? `${title} | ${site.name}` : site.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang={site.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} | Blog`} href="/rss.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#f8f4ec" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)" />
+
+    <!-- Theme + JS flag before paint (and re-applied to each incoming page during view transitions) -->
+    <script is:inline>
+      (() => {
+        const prefersDark = () => {
+          try {
+            const t = localStorage.getItem('theme');
+            if (t) return t === 'dark';
+          } catch {}
+          return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        };
+        const apply = (doc) => {
+          doc.documentElement.classList.add('js');
+          doc.documentElement.classList.toggle('dark', prefersDark());
+        };
+        apply(document);
+        if (!window.__themeWired) {
+          window.__themeWired = true;
+          document.addEventListener('astro:before-swap', (e) => apply(e.newDocument));
+        }
+      })();
+    </script>
+
+    <ClientRouter />
+  </head>
+  <body class="min-h-svh overflow-x-clip">
+    <a
+      href="#main"
+      class="sr-only rounded-md bg-foreground px-4 py-2 text-sm text-background focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60]"
+      >Skip to content</a
+    >
+    <Header />
+    <div transition:persist="site-menu"><MenuNav /></div>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+    <Lightbox />
+
+    <script>
+      import '@/scripts/lifecycle';
+    </script>
+  </body>
+</html>

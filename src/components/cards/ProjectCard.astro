@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Card from '@/components/ui/Card.astro';
+import Badge from '@/components/ui/Badge.astro';
+import CoverImage from '@/components/ui/CoverImage.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { cn, pad } from '@/lib/utils';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  index?: number;
+  class?: string;
+}
+const { project, index, class: className } = Astro.props;
+const { title, summary, year, tags, cover, coverAlt, pattern, status } = project.data;
+const tones = ['bg-primary/10 text-primary', 'bg-accent/20 text-accent-foreground dark:text-accent', 'bg-secondary text-secondary-foreground'];
+const tone = tones[(index ?? 0) % tones.length];
+---
+
+<Card class={cn('group overflow-hidden', className)}>
+  <a href={`/projects/${project.id}`} class="flex h-full flex-col" data-sound="hover">
+    <CoverImage
+      src={cover}
+      alt={coverAlt ?? title}
+      pattern={pattern}
+      class={cn('aspect-[4/3]', !cover && tone)}
+      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+      zoom
+    >
+      <div class="absolute inset-x-4 top-4 flex items-center justify-between">
+        {index !== undefined && <span class="rounded-full bg-card/85 px-2.5 py-0.5 text-xs text-foreground tabular-nums backdrop-blur">{pad(index + 1)}</span>}
+        <Badge variant="outline" class="ml-auto bg-card/85 text-foreground capitalize backdrop-blur">{status}</Badge>
+      </div>
+      <span
+        class="absolute right-4 bottom-4 grid size-11 translate-y-2 place-items-center rounded-full bg-foreground text-background opacity-0 transition-all duration-500 ease-out-expo group-hover:translate-y-0 group-hover:opacity-100"
+      >
+        <Icon name="arrow-up-right" class="size-4" />
+      </span>
+    </CoverImage>
+    <div class="flex flex-1 flex-col gap-3 p-6">
+      <p class="eyebrow">{year} · {tags.slice(0, 2).join(' / ')}</p>
+      <h3 class="text-2xl leading-tight font-medium text-balance">{title}</h3>
+      <p class="line-clamp-2 text-muted-foreground">{summary}</p>
+    </div>
+  </a>
+</Card>

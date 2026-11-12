@@ -1,0 +1,52 @@
+---
+/**
+ * Placeholder shown when a collection (projects, posts, certifications, publications) has no entries yet.
+ * Pass `action` to offer a next step, e.g. a link back home or to the contact page.
+ */
+import Icon, { type IconName } from '@/components/ui/Icon.astro';
+import Pattern from '@/components/ui/Pattern.astro';
+import Button from '@/components/ui/Button.astro';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  title: string;
+  description?: string;
+  icon?: IconName;
+  pattern?: 'rows' | 'contours' | 'grid' | 'drops';
+  action?: { label: string; href: string };
+  /** Smaller padding for home-page sections */
+  compact?: boolean;
+  /** Fade in on scroll; disable for elements that start hidden and are toggled by script */
+  reveal?: boolean;
+  class?: string;
+  [key: `data-${string}`]: unknown;
+}
+const { title, description, icon = 'sprout', pattern = 'contours', action, compact = false, reveal = true, class: className, ...rest } = Astro.props;
+---
+
+<div
+  class={cn(
+    'relative overflow-hidden rounded-2xl border border-dashed border-border bg-muted/40 text-center',
+    compact ? 'px-6 py-12' : 'px-6 py-20 md:py-28',
+    className,
+  )}
+  role="status"
+  data-reveal={reveal ? 'fade' : undefined}
+  {...rest}
+>
+  <Pattern variant={pattern} class="pointer-events-none absolute inset-0 text-primary/10" />
+  <div class="relative mx-auto flex max-w-md flex-col items-center">
+    <span class="grid size-16 place-items-center rounded-full border border-border bg-card text-primary shadow-sm">
+      <Icon name={icon} class="size-7" strokeWidth={1.4} />
+    </span>
+    <p class="mt-6 font-display text-2xl text-balance">{title}</p>
+    {description && <p class="mt-2 text-sm text-pretty text-muted-foreground">{description}</p>}
+    {
+      action && (
+        <Button href={action.href} variant="outline" size="sm" class="mt-6">
+          {action.label} <Icon name="arrow-right" class="size-4" />
+        </Button>
+      )
+    }
+  </div>
+</div>

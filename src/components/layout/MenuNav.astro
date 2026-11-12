@@ -1,0 +1,123 @@
+---
+/**
+ * Floating UI inspired by auge-xp.com
+ *  - bottom-left: theme + sound toggles
+ *  - bottom-right: a small dark box with two accent bars that expands into a panel
+ *    of large, right-aligned links. One accent "pill" slides behind the hovered link.
+ *
+ * The panel is always laid out at full size; open/close only animates its clip-path
+ * (paint-only, no layout work per frame), which keeps the motion smooth.
+ * Behaviour: scripts/menu.ts. Persisted across view transitions (see BaseLayout).
+ */
+import { menuNav, socials } from '@/config/site';
+import { pad } from '@/lib/utils';
+import SoundToggle from './SoundToggle.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const year = new Date().getFullYear();
+---
+
+<div data-menu-root>
+  <div class="pointer-events-none fixed inset-0 z-40 bg-foreground/25 opacity-0 dark:bg-black/50" data-menu-backdrop aria-hidden="true"></div>
+
+  <!-- Left: preferences -->
+  <div class="fixed bottom-4 left-4 z-50 flex items-end gap-2 lg:bottom-8 lg:left-8">
+    <ThemeToggle />
+    <SoundToggle />
+  </div>
+
+  <!-- Right: menu -->
+  <div class="pointer-events-none fixed right-4 bottom-4 z-50 lg:right-8 lg:bottom-8">
+    <div
+      class="menu-panel pointer-events-auto relative w-[min(calc(100vw-2rem),460px)] rounded-[10px] bg-nav text-nav-foreground"
+      data-menu-panel
+    >
+      <div
+        id="site-menu"
+        class="invisible flex flex-col gap-10 p-5"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        inert
+        data-menu-content
+      >
+        <div class="flex items-center justify-between" data-menu-fade>
+          <button type="button" class="-m-3 p-3 text-accent" aria-label="Close menu" data-menu-close data-sound="click">
+            <svg viewBox="0 0 100 100" class="size-3" aria-hidden="true">
+              <line x1="4" y1="4" x2="96" y2="96" stroke="currentColor" stroke-width="14" stroke-linecap="round"></line>
+              <line x1="96" y1="4" x2="4" y2="96" stroke="currentColor" stroke-width="14" stroke-linecap="round"></line>
+            </svg>
+          </button>
+          <span class="text-[11px] tracking-[0.18em] text-nav-muted uppercase">Menu</span>
+        </div>
+
+        <nav class="relative -mr-2 flex flex-col items-end" data-menu-nav aria-label="Primary">
+          <div
+            class="pointer-events-none absolute top-0 left-0 rounded-[4px] bg-accent"
+            style="clip-path:inset(0 100% 0 0)"
+            data-menu-highlight
+            aria-hidden="true"
+          >
+          </div>
+          {
+            menuNav.map((item, i) => (
+              <a
+                href={item.href}
+                class="group relative flex items-baseline gap-3 overflow-hidden px-4 py-1.5 font-display text-menu leading-[1.05] whitespace-nowrap transition-colors duration-200 data-[hover]:text-accent-foreground"
+                data-menu-link
+                data-sound="hover"
+              >
+                <span class="text-[11px] font-sans text-nav-muted tabular-nums transition-colors group-data-[hover]:text-accent-foreground/70">
+                  {pad(i + 1)}
+                </span>
+                <span class="inline-block will-change-transform" data-menu-label>
+                  {item.label}
+                </span>
+                <span
+                  class="absolute top-1/2 left-1.5 size-1.5 -translate-y-1/2 rounded-full bg-accent opacity-0 transition-opacity group-aria-[current=page]:opacity-100 group-data-[hover]:opacity-0"
+                  aria-hidden="true"
+                />
+              </a>
+            ))
+          }
+        </nav>
+
+        <div class="flex items-end justify-between gap-6 text-[11px] font-medium tracking-[0.14em] uppercase" data-menu-fade>
+          <ul class="flex flex-col gap-1">
+            {
+              socials.map((s) => (
+                <li>
+                  <a href={s.href} target="_blank" rel="noopener noreferrer" class="text-nav-muted transition-colors hover:text-accent" data-sound="hover">
+                    {s.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <span class="text-nav-muted">© {year}</span>
+        </div>
+      </div>
+
+      <!-- Closed-state trigger: always sits in the bottom-right corner of the panel -->
+      <button
+        type="button"
+        class="group/trigger absolute right-0 bottom-0 z-10 flex h-11 w-[60px] flex-col items-end justify-center gap-1.5 px-[15px]"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-menu-open
+        data-sound="click"
+      >
+        <span class="block h-0.5 w-[30px] origin-right bg-accent transition-[width] duration-500 ease-out-expo group-hover/trigger:w-[22px]" data-menu-bar></span>
+        <span class="block h-0.5 w-[30px] origin-right bg-accent transition-[width] duration-500 ease-out-expo group-hover/trigger:w-[14px]" data-menu-bar></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Closed state before JS runs: only the 60×44 bottom-right corner is visible */
+  .menu-panel {
+    clip-path: inset(calc(100% - 44px) 0 0 calc(100% - 60px) round 6px);
+  }
+</style>

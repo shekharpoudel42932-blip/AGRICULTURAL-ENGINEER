@@ -1,0 +1,19 @@
+---
+import Icon from '@/components/ui/Icon.astro';
+---
+
+<button
+  type="button"
+  class="group/tt relative grid size-11 place-items-center rounded-[6px] bg-nav text-nav-foreground shadow-lg shadow-black/10 transition-colors hover:text-accent"
+  aria-label="Toggle dark mode"
+  data-theme-toggle
+  data-sound="click"
+>
+  <Icon name="moon" class="size-4 dark:hidden" />
+  <Icon name="sun" class="hidden size-4 dark:block" />
+  <span
+    class="pointer-events-none absolute left-0 bottom-full mb-2 rounded-[4px] bg-nav px-2 py-1 text-[11px] font-medium whitespace-nowrap text-nav-foreground opacity-0 transition-all duration-300 group-hover/tt:-translate-y-0.5 group-hover/tt:opacity-100"
+  >
+    <span class="dark:hidden">Dark mode</span><span class="hidden dark:inline">Light mode</span>
+  </span>
+</button>

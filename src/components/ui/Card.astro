@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { cn } from '@/lib/utils';
+
+interface Props extends HTMLAttributes<'article'> {
+  /** Lift + tilt on hover (see scripts/hover.ts) */
+  interactive?: boolean;
+}
+const { interactive = true, class: className, ...rest } = Astro.props;
+---
+
+<article
+  class={cn('relative rounded-xl border border-border bg-card text-card-foreground', interactive && 'will-change-transform', className)}
+  data-card={interactive ? '' : undefined}
+  {...rest}
+>
+  <slot />
+</article>

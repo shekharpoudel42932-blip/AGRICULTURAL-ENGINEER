@@ -1,0 +1,35 @@
+---
+/** Row of link "chips" used to filter listings by tag (each chip is a real page). */
+import { cn } from '@/lib/utils';
+
+export type Chip = { label: string; href: string; count?: number; active?: boolean };
+
+interface Props {
+  items: Chip[];
+  class?: string;
+}
+const { items, class: className } = Astro.props;
+---
+
+<nav aria-label="Filter by tag" class={cn('mt-10', className)}>
+  <ul class="flex flex-wrap gap-2" data-stagger>
+    {
+      items.map((c) => (
+        <li>
+          <a
+            href={c.href}
+            class={cn(
+              'inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm transition-colors',
+              c.active ? 'border-foreground bg-foreground text-background' : 'border-border hover:border-foreground/40',
+            )}
+            aria-current={c.active ? 'page' : undefined}
+            data-sound="click"
+          >
+            {c.label}
+            {c.count !== undefined && <span class={cn('text-xs tabular-nums', c.active ? 'opacity-70' : 'text-muted-foreground')}>{c.count}</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

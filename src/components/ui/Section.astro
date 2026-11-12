@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { cn } from '@/lib/utils';
+import Container from './Container.astro';
+
+interface Props extends HTMLAttributes<'section'> {
+  size?: 'sm' | 'md' | 'lg';
+  containerClass?: string;
+}
+const { size, class: className, containerClass, ...rest } = Astro.props;
+---
+
+<section class={cn('py-20', className)} {...rest}>
+  <Container size={size} class={containerClass}>
+    <slot />
+  </Container>
+</section>

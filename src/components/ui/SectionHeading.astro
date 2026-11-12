@@ -1,0 +1,27 @@
+---
+import { cn } from '@/lib/utils';
+import LinkArrow from './LinkArrow.astro';
+
+interface Props {
+  index?: string;
+  eyebrow: string;
+  title: string;
+  description?: string;
+  link?: { label: string; href: string };
+  class?: string;
+}
+const { index, eyebrow, title, description, link, class: className } = Astro.props;
+---
+
+<header class={cn('mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between', className)}>
+  <div class="max-w-2xl">
+    <p class="eyebrow mb-4 flex items-center gap-3" data-reveal="fade">
+      {index && <span class="text-primary tabular-nums">{index}</span>}
+      <span class="h-px w-8 bg-border"></span>
+      {eyebrow}
+    </p>
+    <h2 class="text-4xl leading-[1.05] font-medium md:text-6xl" data-split>{title}</h2>
+    {description && <p class="mt-5 text-lg text-muted-foreground" data-reveal>{description}</p>}
+  </div>
+  {link && <LinkArrow href={link.href} data-reveal="fade">{link.label}</LinkArrow>}
+</header>

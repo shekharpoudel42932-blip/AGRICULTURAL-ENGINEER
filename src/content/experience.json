@@ -1,0 +1,59 @@
+[
+  {
+    "id": "akc-nawalparasi",
+    "role": "Agricultural Engineering Consultant",
+    "organization": "Agriculture Knowledge Center, Nawalparasi (Bardaghat-Susta West)",
+    "start": "Apr 2026",
+    "end": "Present",
+    "location": "Parasi, Nepal",
+    "summary": "Working on the Agriculture Development Program with irrigation: subsidised solar irrigation, shallow tube wells, irrigation canals and pumping equipment for farmers.",
+    "highlights": [
+      "Solar irrigation and shallow tube well (STW) schemes",
+      "Irrigation canals and subsidised pumping equipment"
+    ],
+    "order": 1
+  },
+  {
+    "id": "akc-banke",
+    "role": "Agricultural Engineer",
+    "organization": "Agriculture Knowledge Center, Banke",
+    "start": "Feb 2025",
+    "end": "Apr 2026",
+    "location": "Nepalgunj, Nepal",
+    "summary": "Designed, estimated and closed out subsidised shallow tube well irrigation schemes, and facilitated the distribution of subsidised equipment to farmers.",
+    "highlights": [
+      "Design, estimation and work completion reports for subsidised STW schemes",
+      "Digital field survey (KoboToolbox) on how subsidised irrigation affects farmers' livelihoods",
+      "Farmer trainings on farm machinery and irrigation practices"
+    ],
+    "order": 2
+  },
+  {
+    "id": "nepal-agrotech",
+    "role": "Research Associate",
+    "organization": "Nepal Agrotech Solution Pvt. Ltd.",
+    "start": "Aug 2024",
+    "end": "Jan 2025",
+    "location": "Kathmandu, Nepal",
+    "summary": "Used FAO's CROPWAT 8.0 to analyse evapotranspiration and rainfall variability, showing that optimised irrigation scheduling could sharply reduce water losses.",
+    "highlights": [
+      "Estimated deep percolation (recharge) with a daily soil water balance",
+      "Showed puddled paddy irrigation drives high runoff and little aquifer recharge"
+    ],
+    "order": 3
+  },
+  {
+    "id": "naess-secretary",
+    "role": "Secretary",
+    "organization": "Nepal Agricultural Engineering Students' Society",
+    "start": "Apr 2021",
+    "end": "May 2022",
+    "location": "Dharan, Nepal",
+    "summary": "Student leadership role in the Department of Agricultural Engineering.",
+    "highlights": [
+      "Advocated for student welfare programmes",
+      "Organised AutoCAD, SketchUp and thesis-writing trainings"
+    ],
+    "order": 4
+  }
+]

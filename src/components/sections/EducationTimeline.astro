@@ -1,0 +1,28 @@
+---
+import { getEducation } from '@/lib/content';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Timeline from '@/components/ui/Timeline.astro';
+import TimelineItem from '@/components/cards/TimelineItem.astro';
+
+const education = await getEducation();
+---
+
+<Section>
+  <SectionHeading index="03" eyebrow="Education" title="Academic roots" link={{ label: 'Education & experience', href: '/education' }} />
+  <Timeline>
+    {
+      education.map(({ data }) => (
+        <TimelineItem
+          title={data.degree}
+          subtitle={data.institution}
+          start={data.start}
+          end={data.end}
+          meta={data.grade}
+          summary={data.summary}
+          icon="graduation"
+        />
+      ))
+    }
+  </Timeline>
+</Section>

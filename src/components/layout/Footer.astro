@@ -1,0 +1,72 @@
+---
+import { nav, site, socials } from '@/config/site';
+import Container from '@/components/ui/Container.astro';
+import Pattern from '@/components/ui/Pattern.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative overflow-hidden border-t border-border bg-card pt-20 pb-28 lg:pb-32">
+  <div class="pointer-events-none absolute inset-0 text-primary/10" data-parallax="-0.15">
+    <Pattern variant="contours" />
+  </div>
+
+  <Container class="relative">
+    <div class="grid gap-12 md:grid-cols-12">
+      <div class="md:col-span-7">
+        <p class="eyebrow mb-6" data-reveal="fade">Get in touch</p>
+        <h2 class="text-5xl leading-[0.95] font-medium md:text-7xl" data-split>Let's grow something together.</h2>
+        <a
+          href={`mailto:${site.email}`}
+          class="link-sweep mt-8 font-display text-2xl text-primary md:text-3xl"
+          data-sound="click"
+          data-reveal
+        >
+          {site.email}
+        </a>
+      </div>
+
+      <nav class="grid grid-cols-2 gap-8 text-sm md:col-span-5 md:justify-self-end" aria-label="Footer">
+        <ul class="flex flex-col gap-2" data-stagger>
+          {
+            nav.map((n) => (
+              <li>
+                <a href={n.href} class="link-sweep text-muted-foreground hover:text-foreground" data-sound="hover">
+                  {n.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <ul class="flex flex-col gap-2" data-stagger>
+          {
+            socials.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link-sweep text-muted-foreground hover:text-foreground"
+                  data-sound="hover"
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="/rss.xml" class="link-sweep text-muted-foreground hover:text-foreground" data-sound="hover">
+              <Icon name="rss" class="size-3.5" /> RSS
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="mt-20 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
+      <span>© {year} {site.name}. All rights reserved.</span>
+      <span>{site.role} · {site.location}</span>
+    </div>
+  </Container>
+</footer>

@@ -1,0 +1,26 @@
+---
+import { getPosts } from '@/lib/content';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import PostCard from '@/components/cards/PostCard.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+
+interface Props {
+  limit?: number;
+}
+const { limit = 3 } = Astro.props;
+const posts = (await getPosts()).slice(0, limit);
+---
+
+<Section>
+  <SectionHeading index="06" eyebrow="Journal" title="Notes from the field" link={{ label: 'Read the blog', href: '/blog' }} />
+  {
+    posts.length > 0 ? (
+      <div class="grid gap-6 md:grid-cols-3" data-stagger>
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    ) : (
+      <EmptyState compact icon="book" pattern="contours" title="No posts yet" description="Field notes and write-ups will appear here soon." />
+    )
+  }
+</Section>

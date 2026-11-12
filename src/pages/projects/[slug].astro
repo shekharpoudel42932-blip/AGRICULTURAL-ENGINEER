@@ -1,0 +1,122 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Badge from '@/components/ui/Badge.astro';
+import Tag from '@/components/ui/Tag.astro';
+import Icon from '@/components/ui/Icon.astro';
+import CoverImage from '@/components/ui/CoverImage.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import Gallery from '@/components/media/Gallery.astro';
+import Attachments from '@/components/media/Attachments.astro';
+import { resolveAttachments } from '@/lib/attachments';
+import { getProjects } from '@/lib/content';
+import { ogImageFor } from '@/lib/og';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project, next } = Astro.props;
+const { Content } = await render(project);
+const { title, summary, year, role, location, status, tags, metrics, links, cover, coverAlt, pattern, gallery } = project.data;
+const files = resolveAttachments(project.filePath, project.data.attachments);
+const ogImage = await ogImageFor(cover);
+const facts = [
+  { label: 'Year', value: String(year) },
+  { label: 'Role', value: role },
+  ...(location ? [{ label: 'Location', value: location }] : []),
+];
+---
+
+<BaseLayout title={title} description={summary} type="article" image={ogImage}>
+  <article>
+    <header class="pt-36 pb-12 md:pt-48">
+      <Container>
+        <a href="/projects" class="link-sweep mb-10 text-sm text-muted-foreground" data-reveal="fade" data-sound="click">
+          <Icon name="arrow-left" class="size-4" /> All projects
+        </a>
+        <div class="mb-6 flex flex-wrap gap-2" data-reveal="fade">
+          <Badge variant="primary" class="capitalize">{status}</Badge>
+          {tags.map((t) => <Tag label={t} linked base="/projects/tags" />)}
+        </div>
+        <h1 class="max-w-5xl text-4xl leading-[1] font-medium text-balance md:text-7xl" data-split>{title}</h1>
+        <p class="mt-8 max-w-2xl text-xl text-muted-foreground" data-reveal>{summary}</p>
+      </Container>
+    </header>
+
+    <Container>
+      <div data-reveal="scale">
+        <CoverImage src={cover} alt={coverAlt ?? title} pattern={pattern} class="aspect-[16/8] rounded-2xl" sizes="(min-width: 1280px) 1200px, 100vw" priority />
+      </div>
+
+      <div class="mt-16 grid gap-12 md:grid-cols-12">
+        <aside class="md:col-span-4">
+          <dl class="divide-y divide-border border-y border-border md:sticky md:top-28" data-stagger>
+            {
+              facts.map((f) => (
+                <div class="flex justify-between gap-4 py-4 text-sm">
+                  <dt class="text-muted-foreground">{f.label}</dt>
+                  <dd class="text-right font-medium">{f.value}</dd>
+                </div>
+              ))
+            }
+            {
+              links.length > 0 && (
+                <div class="flex flex-col gap-2 py-4">
+                  {links.map((l) => (
+                    <a href={l.href} class="link-sweep text-sm text-primary" data-sound="click">
+                      {l.label} <Icon name="arrow-up-right" class="size-3.5" />
+                    </a>
+                  ))}
+                </div>
+              )
+            }
+          </dl>
+        </aside>
+
+        <div class="md:col-span-8">
+          {
+            metrics.length > 0 && (
+              <dl class="mb-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4" data-stagger>
+                {metrics.map((m) => (
+                  <div class="flex min-w-0 flex-col rounded-xl border border-border bg-card p-4 md:p-5">
+                    <dd class="font-display text-xl leading-tight font-medium text-balance break-words text-primary sm:text-2xl lg:text-3xl">{m.value}</dd>
+                    <dt class="mt-2 text-xs leading-snug text-muted-foreground md:text-sm">{m.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            )
+          }
+          <div class="prose prose-lg prose-field max-w-none prose-headings:font-display prose-headings:font-medium" data-reveal>
+            <Content />
+          </div>
+          <Gallery items={gallery} id={`${project.id}-gallery`} class="mt-16" />
+          <Attachments items={files} id={`${project.id}-files`} class="mt-16" />
+        </div>
+      </div>
+
+      {
+        next && next.id !== project.id && (
+          <a href={`/projects/${next.id}`} class="group mt-24 block border-t border-border pt-10" data-sound="click">
+            <span class="eyebrow">Next project</span>
+            <span class="mt-4 flex items-end justify-between gap-6">
+              <span class="font-display text-3xl leading-tight font-medium transition-colors group-hover:text-primary md:text-6xl">
+                {next.data.title}
+              </span>
+              <span class="grid size-14 shrink-0 place-items-center rounded-full border border-border transition-all duration-500 group-hover:-rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+                <Icon name="arrow-right" />
+              </span>
+            </span>
+          </a>
+        )
+      }
+    </Container>
+  </article>
+
+  <ContactCTA />
+</BaseLayout>

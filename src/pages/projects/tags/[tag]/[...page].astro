@@ -1,0 +1,31 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectListing from '@/components/listings/ProjectListing.astro';
+import { getProjects, getProjectTags, withTag, type TagCount } from '@/lib/content';
+import { pageSize } from '@/config/site';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const [projects, tags] = await Promise.all([getProjects(), getProjectTags()]);
+  return tags.flatMap((tag) =>
+    paginate(withTag(projects, tag.slug), {
+      params: { tag: tag.slug },
+      props: { tag, tags, totalProjects: projects.length },
+      pageSize: pageSize.projects,
+    }),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<'projects'>>;
+  tag: TagCount;
+  tags: TagCount[];
+  totalProjects: number;
+}
+const { page, tag, tags, totalProjects } = Astro.props;
+---
+
+<BaseLayout title={`${tag.label} projects${page.currentPage > 1 ? `, page ${page.currentPage}` : ''}`} description={`Projects in ${tag.label}.`}>
+  <ProjectListing page={page} baseUrl={`/projects/tags/${tag.slug}`} tags={tags} totalProjects={totalProjects} activeTag={tag} />
+</BaseLayout>

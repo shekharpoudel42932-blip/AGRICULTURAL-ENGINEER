@@ -1,0 +1,26 @@
+---
+title: Building a soil sensor for $18
+description: "Notes from designing a LoRa soil-moisture node: what mattered, what didn't, and the calibration mistake I made twice."
+date: 2025-03-02
+tags: [IoT, Sensors, Field notes]
+cover: ../../assets/covers/soil.jpg
+coverAlt: "Cross-section illustration of a soil moisture probe among roots"
+---
+import Callout from '@/components/ui/Callout.astro';
+
+Cheap capacitive probes have a reputation for being noisy. Most of that reputation comes from poor sealing and
+uncalibrated readings, not from the sensing principle itself.
+
+## Seal everything
+
+Moisture creeping into the PCB edge causes drift over weeks. A conformal coat plus heat-shrink fixed it.
+
+<Callout title="Mistake I made twice" tone="warning">
+Calibrating in a bucket of sieved soil. Field soil has structure, gravel and roots, so calibrate in situ.
+</Callout>
+
+```python
+# simple two-point calibration
+def vwc(raw, dry=3020, wet=1380):
+    return max(0, min(1, (dry - raw) / (dry - wet)))
+```

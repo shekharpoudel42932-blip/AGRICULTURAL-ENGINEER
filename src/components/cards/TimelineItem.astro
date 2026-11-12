@@ -1,0 +1,40 @@
+---
+import Icon, { type IconName } from '@/components/ui/Icon.astro';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  start: string;
+  end: string;
+  meta?: string;
+  summary?: string;
+  highlights?: string[];
+  icon?: IconName;
+}
+const { title, subtitle, start, end, meta, summary, highlights = [], icon = 'graduation' } = Astro.props;
+---
+
+<li class="relative grid gap-3 pb-14 pl-14 last:pb-0 md:grid-cols-12 md:gap-8 md:pl-0" data-reveal>
+  <span
+    class="absolute top-0 left-0 grid size-10 place-items-center rounded-full border border-border bg-background text-primary md:left-[calc(25%-1.25rem)]"
+    data-timeline-dot
+  >
+    <Icon name={icon} class="size-4" />
+  </span>
+  <p class="text-sm text-muted-foreground tabular-nums md:col-span-3 md:pt-2 md:pr-14 md:text-right">{start} to {end}</p>
+  <div class="md:col-span-9 md:pl-10">
+    <h3 class="text-2xl leading-tight font-medium">{title}</h3>
+    <p class="mt-1 text-primary">{subtitle}</p>
+    {meta && <p class="mt-1 text-sm text-muted-foreground">{meta}</p>}
+    {summary && <p class="mt-4 max-w-2xl text-muted-foreground">{summary}</p>}
+    {
+      highlights.length > 0 && (
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {highlights.map((h) => (
+            <li class="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">{h}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</li>

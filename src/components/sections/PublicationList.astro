@@ -1,0 +1,26 @@
+---
+import { getPublications } from '@/lib/content';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import PublicationItem from '@/components/cards/PublicationItem.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+
+interface Props {
+  limit?: number;
+}
+const { limit = 3 } = Astro.props;
+const publications = (await getPublications()).slice(0, limit);
+---
+
+<Section class="bg-card">
+  <SectionHeading index="05" eyebrow="Publications" title="Recent research" link={{ label: 'All publications', href: '/publications' }} />
+  {
+    publications.length > 0 ? (
+      <div data-stagger>
+        {publications.map((p) => <PublicationItem publication={p} />)}
+      </div>
+    ) : (
+      <EmptyState compact icon="file" pattern="rows" title="No publications yet" description="Research outputs will be listed here as they are published." />
+    )
+  }
+</Section>

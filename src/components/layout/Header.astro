@@ -1,0 +1,47 @@
+---
+/**
+ * Fixed logo (top-right, auge-style) + a quiet status line (top-left).
+ * Both use mix-blend-difference so they stay legible over any background.
+ */
+import { site } from '@/config/site';
+---
+
+<header class="pointer-events-none fixed inset-x-0 top-0 z-40 hidden mix-blend-difference md:block">
+  <div class="flex items-start justify-between p-4 text-white lg:p-8">
+    <a
+      href="/"
+      class="pointer-events-auto group flex items-center gap-3"
+      aria-label={`${site.name}, home`}
+      data-sound="click"
+    >
+      <svg viewBox="0 0 40 40" class="size-9 lg:size-10" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="38" height="38" rx="4" stroke="currentColor" stroke-width="2"></rect>
+        <path d="M20 31V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        <path
+          d="M20 18c0-5-3.5-8-9-8 0 5 3.5 8 9 8Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+          class="origin-[20px_18px] transition-transform duration-500 group-hover:-rotate-12"></path>
+        <path
+          d="M20 22c0-5 3.5-8 9-8 0 5-3.5 8-9 8Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+          class="origin-[20px_22px] transition-transform duration-500 group-hover:rotate-12"></path>
+      </svg>
+      <span class="hidden leading-tight sm:block">
+        <span class="block font-display text-lg font-medium">{site.name}</span>
+        <span class="block text-[11px] tracking-[0.18em] uppercase opacity-70">{site.role}</span>
+      </span>
+    </a>
+
+    <p class="hidden items-center gap-2 text-[11px] tracking-[0.18em] uppercase md:flex">
+      <span class="relative flex size-2">
+        <span class="absolute inline-flex size-full animate-ping rounded-full bg-white opacity-60"></span>
+        <span class="relative inline-flex size-2 rounded-full bg-white"></span>
+      </span>
+      {site.availability}
+    </p>
+  </div>
+</header>

@@ -1,0 +1,22 @@
+---
+import { stats } from '@/config/site';
+import Container from '@/components/ui/Container.astro';
+---
+
+<section class="border-y border-border bg-card">
+  <Container>
+    <dl class="grid grid-cols-2 md:grid-cols-4" data-stagger>
+      {
+        stats.map((s) => (
+          <div class="border-border py-10 pr-4 not-first:pl-4 odd:border-r md:border-r md:last:border-r-0 md:not-first:pl-8">
+            <dt class="text-sm text-muted-foreground">{s.label}</dt>
+            <dd class="mt-2 font-display text-4xl font-medium tabular-nums md:text-6xl">
+              <span data-counter={s.value}>{s.value.toLocaleString('en-US')}</span>
+              <span class="text-primary">{s.suffix}</span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Container>
+</section>

@@ -1,0 +1,114 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/ui/PageHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { site, socials } from '@/config/site';
+
+const topics = ['Irrigation design', 'Research collaboration', 'Consulting', 'Speaking / workshop', 'Something else'];
+const field =
+  'w-full rounded-lg border border-input bg-background px-4 py-3 text-base outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-ring/20';
+---
+
+<BaseLayout title="Contact" description={`Get in touch with ${site.name}.`}>
+  <PageHeader eyebrow="Contact" title="Let's talk." description="Tell me about your farm, your research question or your project. I usually reply within two working days." />
+
+  <Section class="pt-0 md:pt-0">
+    <div class="grid gap-12 md:grid-cols-12">
+      <aside class="space-y-8 md:col-span-4" data-stagger>
+        <div>
+          <p class="eyebrow mb-2">Email</p>
+          <div class="flex items-center gap-3">
+            <a href={`mailto:${site.email}`} class="link-sweep font-display text-2xl" data-sound="click">{site.email}</a>
+            <button
+              type="button"
+              class="grid size-9 place-items-center rounded-full border border-border transition-colors hover:border-primary hover:text-primary"
+              aria-label="Copy email address"
+              data-copy={site.email}
+              data-sound="click"
+            >
+              <Icon name="copy" class="size-4" data-copy-icon />
+              <Icon name="check" class="hidden size-4 text-primary" data-copied-icon />
+            </button>
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow mb-2">Based</p>
+          <p class="flex items-center gap-2"><Icon name="map-pin" class="size-4 text-primary" />{site.location}</p>
+        </div>
+        <div>
+          <p class="eyebrow mb-3">Elsewhere</p>
+          <ul class="space-y-2">
+            {
+              socials.map((s) => (
+                <li>
+                  <a href={s.href} target="_blank" rel="noopener noreferrer" class="link-sweep" data-sound="hover">
+                    {s.label} <Icon name="arrow-up-right" class="size-3.5" />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
+
+      <form class="grid gap-5 rounded-2xl border border-border bg-card p-6 md:col-span-8 md:p-10" data-contact-form data-email={site.email} data-reveal>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="grid gap-2 text-sm font-medium">Name<input name="name" required autocomplete="name" class={field} placeholder="Your name" /></label>
+          <label class="grid gap-2 text-sm font-medium">Email<input name="email" type="email" required autocomplete="email" class={field} placeholder="you@example.com" /></label>
+        </div>
+        <fieldset class="grid gap-3">
+          <legend class="mb-2 text-sm font-medium">What's it about?</legend>
+          <div class="flex flex-wrap gap-2">
+            {
+              topics.map((t, i) => (
+                <label class="cursor-pointer" data-sound="hover">
+                  <input type="radio" name="topic" value={t} class="peer sr-only" checked={i === 0} />
+                  <span class="inline-block rounded-full border border-border px-4 py-2 text-sm transition-colors peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:ring-2 peer-focus-visible:ring-ring">
+                    {t}
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <label class="grid gap-2 text-sm font-medium">Message<textarea name="message" rows="6" required class={field} placeholder="A few lines about your project…"></textarea></label>
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <p class="text-xs text-muted-foreground">Opens your email app with the message pre-filled.</p>
+          <Button type="submit" size="lg">Send message <Icon name="arrow-right" class="size-4" /></Button>
+        </div>
+      </form>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  // Re-bound on every page load (view transitions)
+  document.addEventListener('astro:page-load', () => {
+    const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = new FormData(form);
+      const subject = `[${d.get('topic')}] Message from ${d.get('name')}`;
+      const body = `${d.get('message')}\n\n${d.get('name')} <${d.get('email')}>`;
+      window.location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy!);
+          btn.querySelector('[data-copy-icon]')?.classList.add('hidden');
+          btn.querySelector('[data-copied-icon]')?.classList.remove('hidden');
+          setTimeout(() => {
+            btn.querySelector('[data-copy-icon]')?.classList.remove('hidden');
+            btn.querySelector('[data-copied-icon]')?.classList.add('hidden');
+          }, 1600);
+        } catch {
+          /* clipboard blocked */
+        }
+      });
+    });
+  });
+</script>

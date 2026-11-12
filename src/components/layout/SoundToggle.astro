@@ -1,0 +1,37 @@
+---
+/** Speaker toggle. Wave/cross groups are swapped via [data-sound-state] (see scripts/sound.ts). */
+---
+
+<button
+  type="button"
+  class="group/tt relative grid size-11 place-items-center rounded-[6px] bg-nav text-nav-foreground shadow-lg shadow-black/10 transition-colors hover:text-accent"
+  aria-label="Toggle sound effects"
+  aria-pressed="false"
+  data-sound-toggle
+  data-sound-state="off"
+>
+  <svg viewBox="0 0 25 22" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-auto" aria-hidden="true">
+    <path
+      d="M13.75 4.31C13.75 2.61 11.76 1.69 10.46 2.79L6.51 6.13C6.15 6.43 5.69 6.6 5.22 6.6H3.25C1.87 6.6.75 7.72.75 9.1v3.8c0 1.38 1.12 2.5 2.5 2.5h1.97c.47 0 .93.17 1.29.47l3.95 3.34c1.3 1.1 3.29.18 3.29-1.53V4.31Z"
+    ></path>
+    <g data-sound-wave stroke-linecap="round">
+      <path d="M18.32 14.76c.85-.95 1.36-2.12 1.36-3.4s-.5-2.45-1.36-3.39"></path>
+      <path d="M22.39 17.48c.85-1.7 1.36-3.82 1.36-6.11s-.51-4.41-1.36-6.11"></path>
+    </g>
+    <g data-sound-cross stroke-linecap="round">
+      <path d="M17.9 13.22 22.4 8.74"></path>
+      <path d="M17.9 8.74 22.4 13.22"></path>
+    </g>
+  </svg>
+  <span
+    class="pointer-events-none absolute left-0 bottom-full mb-2 rounded-[4px] bg-nav px-2 py-1 text-[11px] font-medium whitespace-nowrap text-nav-foreground opacity-0 transition-all duration-300 group-hover/tt:-translate-y-0.5 group-hover/tt:opacity-100"
+    data-sound-label>Sound off</span
+  >
+</button>
+
+<style>
+  [data-sound-state='off'] [data-sound-wave],
+  [data-sound-state='on'] [data-sound-cross] {
+    display: none;
+  }
+</style>

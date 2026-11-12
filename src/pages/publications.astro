@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/ui/PageHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import PublicationItem from '@/components/cards/PublicationItem.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+import { getPublications, getPublicationsByYear } from '@/lib/content';
+
+const [all, byYear] = await Promise.all([getPublications(), getPublicationsByYear()]);
+const counts = {
+  total: all.length,
+  journal: all.filter((p) => p.data.type === 'journal').length,
+  conference: all.filter((p) => p.data.type === 'conference').length,
+};
+---
+
+<BaseLayout title="Publications" description="Peer-reviewed papers, conference proceedings and theses.">
+  <PageHeader
+    eyebrow="Publications"
+    title="Research & writing"
+    description="Peer-reviewed work on irrigation, sensing, machinery and post-harvest engineering."
+  >
+    <dl class="mt-12 flex flex-wrap gap-10 text-sm" data-stagger>
+      <div><dt class="text-muted-foreground">Total</dt><dd class="font-display text-4xl">{counts.total}</dd></div>
+      <div><dt class="text-muted-foreground">Journal articles</dt><dd class="font-display text-4xl">{counts.journal}</dd></div>
+      <div><dt class="text-muted-foreground">Conference papers</dt><dd class="font-display text-4xl">{counts.conference}</dd></div>
+    </dl>
+  </PageHeader>
+
+  <Section class="pt-0 md:pt-0">
+    {
+      byYear.length === 0 && (
+        <EmptyState
+          icon="file"
+          pattern="rows"
+          title="No publications yet"
+          description="Papers, reports and theses will be listed here as they are published."
+          action={{ label: 'Back to home', href: '/' }}
+        />
+      )
+    }
+    {
+      byYear.map(([year, items]) => (
+        <section class="mb-16 grid gap-6 md:grid-cols-12" aria-labelledby={`y-${year}`}>
+          <h2 id={`y-${year}`} class="font-display text-5xl text-primary md:sticky md:top-28 md:col-span-2 md:self-start" data-reveal="fade">
+            {year}
+          </h2>
+          <div class="md:col-span-10" data-stagger>
+            {items.map((p) => (
+              <PublicationItem publication={p} showAbstract />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </Section>
+</BaseLayout>

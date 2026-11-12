@@ -1,0 +1,75 @@
+---
+/**
+ * Downloadable files (PDFs, reports, data) for posts and projects.
+ * "View" opens files the browser can display (PDF, text) in a new tab; "Download" saves them.
+ */
+import Icon from '@/components/ui/Icon.astro';
+import type { Attachment } from '@/lib/attachments';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  items: Attachment[];
+  id?: string;
+  title?: string;
+  class?: string;
+}
+const { items, id = 'files', title = 'Files & downloads', class: className } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class={cn('not-prose', className)} aria-labelledby={`${id}-heading`}>
+      <div class="mb-6 flex items-end justify-between gap-4 border-b border-border pb-4">
+        <h2 id={`${id}-heading`} class="flex items-center gap-2 font-display text-2xl font-medium">
+          <Icon name="paperclip" class="size-5 text-primary" /> {title}
+        </h2>
+        <span class="text-sm text-muted-foreground tabular-nums">
+          {items.length} file{items.length === 1 ? '' : 's'}
+        </span>
+      </div>
+
+      <ul class="grid gap-3" data-stagger>
+        {items.map((f) => (
+          <li class="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center">
+            <span class="grid size-12 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+              <span class="font-mono text-[0.65rem] font-semibold tracking-wide">{f.ext.slice(0, 4) || 'FILE'}</span>
+            </span>
+            <div class="min-w-0 flex-1">
+              <p class="font-medium break-words">{f.title}</p>
+              {f.description && <p class="mt-0.5 text-sm text-muted-foreground">{f.description}</p>}
+              <p class="mt-1 text-xs text-muted-foreground">
+                {f.ext}
+                {f.size && <> · {f.size}</>}
+              </p>
+            </div>
+            <div class="flex shrink-0 gap-2">
+              {f.viewable && (
+                <a
+                  href={f.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex h-9 items-center gap-1.5 rounded-full border border-foreground/15 px-4 text-sm font-medium transition-colors hover:border-foreground/40 hover:bg-foreground/5"
+                  aria-label={`View ${f.title} (opens in a new tab)`}
+                  data-astro-prefetch="false"
+                  data-sound="click"
+                >
+                  <Icon name="eye" class="size-4" /> View
+                </a>
+              )}
+              <a
+                href={f.href}
+                download={f.fileName}
+                class="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                aria-label={`Download ${f.title}`}
+                data-astro-prefetch="false"
+                data-sound="click"
+              >
+                <Icon name="download" class="size-4" /> Download
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

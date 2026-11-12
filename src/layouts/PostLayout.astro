@@ -1,0 +1,134 @@
+---
+/**
+ * Blog post layout. Mirrors the project detail page: full-width container,
+ * 12-column grid with a sticky details sidebar (4 cols) and the article body (8 cols).
+ */
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Tag from '@/components/ui/Tag.astro';
+import Icon from '@/components/ui/Icon.astro';
+import CoverImage from '@/components/ui/CoverImage.astro';
+import Gallery from '@/components/media/Gallery.astro';
+import Attachments from '@/components/media/Attachments.astro';
+import { resolveAttachments } from '@/lib/attachments';
+import { ogImageFor } from '@/lib/og';
+import { formatDate, readingTime } from '@/lib/utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  prev?: CollectionEntry<'blog'>;
+  next?: CollectionEntry<'blog'>;
+}
+const { post, prev, next } = Astro.props;
+const { title, description, date, updated, tags, cover, coverAlt, gallery } = post.data;
+const files = resolveAttachments(post.filePath, post.data.attachments);
+
+const ogImage = await ogImageFor(cover);
+const facts = [
+  { label: 'Published', value: formatDate(date) },
+  ...(updated ? [{ label: 'Updated', value: formatDate(updated) }] : []),
+  { label: 'Reading time', value: readingTime(post.body) },
+];
+---
+
+<BaseLayout title={title} description={description} type="article" image={ogImage}>
+  <div class="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-accent" data-progress aria-hidden="true"></div>
+
+  <article>
+    <header class="pt-36 pb-12 md:pt-48">
+      <Container>
+        <a href="/blog" class="link-sweep mb-10 text-sm text-muted-foreground" data-reveal="fade" data-sound="click">
+          <Icon name="arrow-left" class="size-4" /> All posts
+        </a>
+        <div class="mb-6 flex flex-wrap gap-2" data-reveal="fade">
+          {tags.map((t) => <Tag label={t} linked />)}
+        </div>
+        <h1 class="max-w-5xl text-4xl leading-[1] font-medium text-balance md:text-7xl" data-split>{title}</h1>
+        <p class="mt-8 max-w-2xl text-xl text-muted-foreground" data-reveal>{description}</p>
+      </Container>
+    </header>
+
+    <Container>
+      {
+        cover && (
+          <div class="mb-16" data-reveal="scale">
+            <CoverImage src={cover} alt={coverAlt ?? ''} class="aspect-[16/8] rounded-2xl" sizes="(min-width: 1280px) 1200px, 100vw" priority />
+          </div>
+        )
+      }
+
+      <div class="grid gap-12 md:grid-cols-12">
+        <aside class="md:col-span-4">
+          <dl class="divide-y divide-border border-y border-border md:sticky md:top-28" data-stagger>
+            {
+              facts.map((f) => (
+                <div class="flex justify-between gap-4 py-4 text-sm">
+                  <dt class="text-muted-foreground">{f.label}</dt>
+                  <dd class="text-right font-medium">{f.value}</dd>
+                </div>
+              ))
+            }
+            <div class="flex justify-between gap-4 py-4 text-sm">
+              <dt class="text-muted-foreground">Filed under</dt>
+              <dd class="flex flex-wrap justify-end gap-x-2 text-right font-medium">
+                {
+                  tags.map((t, i) => (
+                    <span>
+                      {t}
+                      {i < tags.length - 1 && ','}
+                    </span>
+                  ))
+                }
+              </dd>
+            </div>
+          </dl>
+        </aside>
+
+        <div class="md:col-span-8">
+          <div class="prose prose-lg prose-field max-w-none prose-headings:font-display prose-headings:font-medium prose-a:underline-offset-4" data-reveal>
+            <slot />
+          </div>
+
+          <Gallery items={gallery} id={`${post.id}-gallery`} class="mt-16" />
+          <Attachments items={files} id={`${post.id}-files`} class="mt-16" />
+
+          <nav class="mt-20 grid gap-4 border-t border-border pt-10 sm:grid-cols-2" aria-label="More posts">
+            {
+              prev && (
+                <a href={`/blog/${prev.id}`} class="group rounded-xl border border-border p-5 transition-colors hover:border-primary" data-sound="click">
+                  <span class="eyebrow">Previous</span>
+                  <span class="mt-2 block font-display text-lg leading-tight group-hover:text-primary">{prev.data.title}</span>
+                </a>
+              )
+            }
+            {
+              next && (
+                <a
+                  href={`/blog/${next.id}`}
+                  class="group rounded-xl border border-border p-5 text-right transition-colors hover:border-primary sm:col-start-2"
+                  data-sound="click"
+                >
+                  <span class="eyebrow">Next</span>
+                  <span class="mt-2 block font-display text-lg leading-tight group-hover:text-primary">{next.data.title}</span>
+                </a>
+              )
+            }
+          </nav>
+        </div>
+      </div>
+
+      <a href="/blog" class="group mt-24 mb-24 block border-t border-border pt-10" data-sound="click">
+        <span class="eyebrow">Keep reading</span>
+        <span class="mt-4 flex items-end justify-between gap-6">
+          <span class="font-display text-3xl leading-tight font-medium transition-colors group-hover:text-primary md:text-6xl">Back to the journal</span>
+          <span
+            class="grid size-14 shrink-0 place-items-center rounded-full border border-border transition-all duration-500 group-hover:-rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"
+          >
+            <Icon name="arrow-right" />
+          </span>
+        </span>
+      </a>
+    </Container>
+  </article>
+</BaseLayout>

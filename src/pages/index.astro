@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/sections/Hero.astro';
+import Stats from '@/components/sections/Stats.astro';
+import About from '@/components/sections/About.astro';
+import FeaturedProjects from '@/components/sections/FeaturedProjects.astro';
+import EducationTimeline from '@/components/sections/EducationTimeline.astro';
+import Certifications from '@/components/sections/Certifications.astro';
+import PublicationList from '@/components/sections/PublicationList.astro';
+import LatestPosts from '@/components/sections/LatestPosts.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import Marquee from '@/components/layout/Marquee.astro';
+import { expertise } from '@/config/site';
+---
+
+<BaseLayout>
+  <Hero />
+  <Stats />
+  <About />
+  <Marquee items={expertise} class="border-y border-border text-muted-foreground" />
+  <FeaturedProjects />
+  <EducationTimeline />
+  <Certifications index="04" />
+  <PublicationList />
+  <LatestPosts />
+  <ContactCTA />
+</BaseLayout>

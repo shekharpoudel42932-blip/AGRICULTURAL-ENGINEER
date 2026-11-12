@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogListing from '@/components/listings/BlogListing.astro';
+import { getPosts, getTags } from '@/lib/content';
+import { pageSize } from '@/config/site';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  return paginate(await getPosts(), { pageSize: pageSize.blog });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<'blog'>>;
+}
+const { page } = Astro.props;
+const tags = await getTags();
+---
+
+<BaseLayout
+  title={page.currentPage > 1 ? `Blog, page ${page.currentPage}` : 'Blog'}
+  description="Field notes, research explainers and engineering write-ups."
+>
+  <BlogListing page={page} baseUrl="/blog" tags={tags} totalPosts={page.total} />
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+import { getCertifications } from '@/lib/content';
+import Section from '@/components/ui/Section.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import CertificationCard from '@/components/cards/CertificationCard.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+
+interface Props {
+  index?: string;
+  limit?: number;
+}
+const { index = '04', limit = 3 } = Astro.props;
+const featured = await getCertifications({ featured: true });
+const items = (featured.length ? featured : await getCertifications()).slice(0, limit);
+---
+
+<Section>
+  <SectionHeading
+    index={index}
+    eyebrow="Training & certification"
+    title="Always learning"
+    description="Professional certifications and training that keep my field practice current."
+    link={{ label: 'All credentials', href: '/certifications' }}
+  />
+  {
+    items.length > 0 ? (
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-stagger>
+        {items.map((cert) => <CertificationCard cert={cert} />)}
+      </div>
+    ) : (
+      <EmptyState compact icon="award" pattern="grid" title="Credentials coming soon" description="Certificates and training records will be added shortly." />
+    )
+  }
+</Section>

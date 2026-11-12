@@ -1,0 +1,46 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { cn } from '@/lib/utils';
+
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'accent';
+type Size = 'sm' | 'md' | 'lg';
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'type'> {
+  href?: string;
+  variant?: Variant;
+  size?: Size;
+  type?: 'button' | 'submit' | 'reset';
+  /** Subtle magnetic pull toward the cursor */
+  magnetic?: boolean;
+}
+
+const { href, variant = 'primary', size = 'md', type = 'button', magnetic = true, class: className, ...rest } = Astro.props;
+
+const base =
+  'group/btn relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-medium whitespace-nowrap transition-colors duration-300 disabled:pointer-events-none disabled:opacity-50';
+const variants: Record<Variant, string> = {
+  primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  accent: 'bg-accent text-accent-foreground hover:bg-accent/90',
+  outline: 'border border-foreground/15 bg-transparent hover:border-foreground/40 hover:bg-foreground/5',
+  ghost: 'hover:bg-foreground/5',
+};
+const sizes: Record<Size, string> = {
+  sm: 'h-9 px-4 text-sm',
+  md: 'h-11 px-6 text-sm',
+  lg: 'h-14 px-8 text-base',
+};
+const classes = cn(base, variants[variant], sizes[size], className);
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class={classes}
+  data-magnetic={magnetic ? '' : undefined}
+  data-sound="click"
+  {...rest}
+>
+  <span class="relative z-10 inline-flex items-center gap-2" data-magnetic-inner><slot /></span>
+</Tag>

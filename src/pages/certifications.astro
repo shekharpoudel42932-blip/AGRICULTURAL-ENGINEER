@@ -1,0 +1,109 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/ui/PageHeader.astro';
+import Section from '@/components/ui/Section.astro';
+import CertificationCard from '@/components/cards/CertificationCard.astro';
+import EmptyState from '@/components/ui/EmptyState.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import { getCertifications } from '@/lib/content';
+
+const all = await getCertifications();
+const certCount = all.filter((c) => c.data.type === 'certification').length;
+const trainingCount = all.length - certCount;
+const hours = all.reduce((sum, c) => sum + (c.data.hours ?? 0), 0);
+
+const tabs = [
+  { id: 'all', label: 'All', count: all.length },
+  { id: 'certification', label: 'Certifications', count: certCount },
+  { id: 'training', label: 'Training', count: trainingCount },
+];
+---
+
+<BaseLayout title="Training & Certification" description="Professional certifications, courses and training.">
+  <PageHeader
+    eyebrow="Training & certification"
+    title="Credentials & continued learning."
+    description="Professional certifications, short courses and field training. Click a certificate to view it in full."
+  >
+    <dl class="mt-12 flex flex-wrap gap-10 text-sm" data-stagger>
+      <div><dt class="text-muted-foreground">Certifications</dt><dd class="font-display text-4xl">{certCount}</dd></div>
+      <div><dt class="text-muted-foreground">Trainings</dt><dd class="font-display text-4xl">{trainingCount}</dd></div>
+      <div><dt class="text-muted-foreground">Training hours</dt><dd class="font-display text-4xl" data-counter={hours}>{hours}</dd></div>
+    </dl>
+
+    <div class="mt-10 flex flex-wrap gap-2" role="tablist" aria-label="Filter credentials" data-cert-tabs>
+      {
+        tabs.map((t, i) => (
+          <button
+            type="button"
+            role="tab"
+            aria-selected={i === 0 ? 'true' : 'false'}
+            class="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm transition-colors hover:border-foreground/40 aria-selected:border-foreground aria-selected:bg-foreground aria-selected:text-background"
+            data-filter={t.id}
+            data-sound="click"
+          >
+            {t.label}
+            <span class="text-xs tabular-nums opacity-60">{t.count}</span>
+          </button>
+        ))
+      }
+    </div>
+  </PageHeader>
+
+  <Section class="pt-0 md:pt-0">
+    {
+      all.length > 0 ? (
+        <>
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-stagger data-cert-grid>
+            {all.map((cert) => <CertificationCard cert={cert} />)}
+          </div>
+          <EmptyState
+            class="hidden"
+            reveal={false}
+            icon="award"
+            pattern="grid"
+            compact
+            title="Nothing in this category yet"
+            description="Try another filter to see the rest of the credentials."
+            data-cert-empty
+          />
+        </>
+      ) : (
+        <EmptyState
+          icon="award"
+          pattern="grid"
+          title="Credentials coming soon"
+          description="Certificates and training records will be added here shortly."
+          action={{ label: 'Back to home', href: '/' }}
+        />
+      )
+    }
+  </Section>
+
+  <ContactCTA />
+</BaseLayout>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  // Client-side type filter (the list is short, so no pagination)
+  document.addEventListener('astro:page-load', () => {
+    const tabs = document.querySelector('[data-cert-tabs]');
+    if (!tabs) return;
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-cert-grid] > [data-cert-type]')];
+
+    tabs.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const f = btn.dataset.filter!;
+        tabs.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+        const show = cards.filter((c) => f === 'all' || c.dataset.certType === f);
+        gsap.set(cards.filter((c) => !show.includes(c)), { display: 'none' });
+        gsap.set(show, { display: '' });
+        document.querySelector('[data-cert-empty]')?.classList.toggle('hidden', show.length > 0);
+        gsap.fromTo(show, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.05, ease: 'expo.out' });
+        ScrollTrigger.refresh();
+      });
+    });
+  });
+</script>

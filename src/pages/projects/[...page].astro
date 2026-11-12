@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectListing from '@/components/listings/ProjectListing.astro';
+import { getProjects, getProjectTags } from '@/lib/content';
+import { pageSize } from '@/config/site';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  return paginate(await getProjects(), { pageSize: pageSize.projects });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<'projects'>>;
+}
+const { page } = Astro.props;
+const tags = await getProjectTags();
+---
+
+<BaseLayout
+  title={page.currentPage > 1 ? `Projects, page ${page.currentPage}` : 'Projects'}
+  description="Irrigation, sensing, machinery and post-harvest engineering projects."
+>
+  <ProjectListing page={page} baseUrl="/projects" tags={tags} totalProjects={page.total} />
+</BaseLayout>

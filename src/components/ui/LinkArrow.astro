@@ -1,0 +1,24 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { cn } from '@/lib/utils';
+import Icon from './Icon.astro';
+
+interface Props extends HTMLAttributes<'a'> {
+  external?: boolean;
+}
+const { external = false, class: className, ...rest } = Astro.props;
+---
+
+<a
+  class={cn('group/la link-sweep inline-flex items-center gap-2 text-sm font-medium', className)}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  data-sound="hover"
+  {...rest}
+>
+  <slot />
+  <Icon
+    name={external ? 'arrow-up-right' : 'arrow-right'}
+    class="size-4 transition-transform duration-300 group-hover/la:translate-x-0.5"
+  />
+</a>
