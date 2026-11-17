@@ -1,5 +1,5 @@
 ---
-title: "Canal automation: lessons from a pilot"
+title: "No canal"
 description: Three automated gates, one season, and why the hardest part wasn't the hardware.
 date: 2026-01-22
 tags: [Irrigation, Automation]

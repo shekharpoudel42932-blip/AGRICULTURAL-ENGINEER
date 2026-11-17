@@ -7,15 +7,15 @@ export type NavItem = { label: string; href: string };
 export type Social = { label: string; href: string; short: string };
 
 export const site = {
-  name: 'Shekhar',
+  name: 'Hi, its me Shekhar',
   role: 'Agricultural Engineer',
   title: 'Shekhar | Agricultural Engineer',
   description:
     'Agricultural engineer working on precision irrigation, farm machinery and post-harvest systems that help farmers grow more with less.',
   tagline: 'Engineering water-smart, data-driven systems for resilient farms.',
-  location: 'Open to field work worldwide',
+  location: 'Seeking MSc opportunities',
   email: 'shekharpoudel42932@gmail.com',
-  availability: 'Available for research & consulting',
+  availability: 'Open for collaboration',
   locale: 'en',
 } as const;
 
@@ -40,9 +40,8 @@ export const socials: Social[] = [
 ];
 
 export const stats = [
-  { value: 6, suffix: '+', label: 'Years in the field' },
+  { value: 2, suffix: '+', label: 'Years in the field' },
   { value: 1200, suffix: ' ha', label: 'Land under designed irrigation' },
-  { value: 9, suffix: '', label: 'Peer-reviewed publications' },
   { value: 24, suffix: '', label: 'Engineering projects delivered' },
 ];
 
