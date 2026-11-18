@@ -41,8 +41,8 @@ export const socials: Social[] = [
 
 export const stats = [
   { value: 2, suffix: '+', label: 'Years in the field' },
-  { value: 1200, suffix: ' ha', label: 'Land under designed irrigation' },
-  { value: 24, suffix: '', label: 'Engineering projects delivered' },
+  { value: 800, suffix: ' ha', label: 'Land under supported irrigation' },
+  { value: 13, suffix: '', label: 'Engineering projects delivered' },
 ];
 
 export const expertise = [
@@ -50,15 +50,14 @@ export const expertise = [
   'Soil & water engineering',
   'Farm machinery design',
   'Post-harvest technology',
-  'IoT sensing',
   'GIS & remote sensing',
   'Renewable energy on farms',
-  'CAD / FEA',
+  'Extension Services',
   'Hydrological modelling',
   'Agri-data analytics',
 ];
 
-export const tools = ['AutoCAD', 'SolidWorks', 'QGIS', 'ArcGIS', 'Python', 'R', 'CROPWAT', 'AquaCrop', 'HEC-RAS', 'Arduino / ESP32'];
+export const tools = ['AutoCAD', 'SolidWorks', 'QGIS', 'ArcGIS', 'Python', 'R', 'CROPWAT', 'AquaCrop', 'HEC-RAS', 'MODFLOW'];
 
 /** Items per page on paginated listings */
 export const pageSize = {
