@@ -5,7 +5,7 @@ year: 2024
 role: Research Associate
 location: Hill region, Nepal
 status: research
-tags: [Irrigation, Crop-water modelling, CROPWAT]
+tags: [Irrigation, Crop-water modelling, CROPWAT, SPAW, NASA Power tool]
 pattern: contours
 featured: true
 order: 1
@@ -25,19 +25,5 @@ attachments:
   - { file: ../../assets/files/samples/cropwat-results.csv, title: CWR & IR results table (sample), description: Raw values per crop as CSV }
 ---
 
-## The question
-
-How much water do paddy, maize, wheat, potato and cauliflower actually need in Nepal's hills, and how much of
-the water applied today is wasted?
-
-## Approach
-
-I ran FAO's CROPWAT 8.0 model to analyse evapotranspiration and rainfall variability, and estimated the crop water
-requirement (CWR) and irrigation requirement (IR) for each crop. I then calculated deep percolation (recharge)
-with a daily soil water balance.
-
-## Findings
-
-- Optimised irrigation scheduling could sharply reduce water losses.
-- The puddled irrigation used for paddy, a major crop in Nepal, causes high surface runoff and low soil moisture
-  retention, so very little water returns to the aquifer.
+ Nepal, with its diverse terrain encompassing the terai plains, hills, and mountains, faces unique agricultural challenges due to distinct biophysical characteristics in each region. This diversity demands location-specific technological innovations for optimal agricultural pro-duction. Nepal's agricultural landscape, particularly in hilly regions, faces challenges related to water scarcity and limited irrigation infrastructure. This study focuses to estimate the crop water and irrigation water requirement for different crops in one of the water scare area of Nepal, Hilly region.
+ The Crop Water Requirement (CWR) and Irrigation Requirement (IR) for major crops, such as paddy, maize, wheat, potato, and cauliflower, in Nepal's hilly region are estimated in this study using the CROPWAT 8.0 model. The NASA power tool provided the agro-climatic data, which included rainfall, maximum and minimum temperatures, hours of sunlight, hu-midity, and wind. FAO statistics provided the crop data, while the Nepal Agricultural Re-search Centre (NARC) soil map provided the soil data. The study found notable differences in IR, which ranged from 35.3 mm for cauliflower in Lamsung to 872.4 mm for paddy in Doti and Dadeldhura, and CWR, which ranged from 179.4 mm for wheat in Jumla to 1133.10 mm for paddy in two districts, Doti and Dadelhura. The maximum crop evapotran-spiration was found to be 8.93 mm per day for potato in Doti and Dadeldhura districts, whereas minimum crop evaporation was 1.63 mm per day for wheat in Jumla district. With-out sacrificing crop yields, effective irrigation scheduling based on these requirements can result in significant water savings. The findings help the farmer to manage the water re-sources in prior to cultivation by using micro irrigation methods like sprinkle irrigation, drip irrigation in order to make farming as a better income source.
