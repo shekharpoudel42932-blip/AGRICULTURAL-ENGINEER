@@ -7,11 +7,11 @@ export type NavItem = { label: string; href: string };
 export type Social = { label: string; href: string; short: string };
 
 export const site = {
-  name: 'Hi, its me Shekhar',
+  name: 'Shekhar Poudel',
   role: 'Agricultural Engineer',
   title: 'Shekhar | Agricultural Engineer',
   description:
-    'Agricultural engineer working on precision irrigation, farm machinery and post-harvest systems that help farmers grow more with less.',
+    'Hi, I am Shekhar Poudel, an Agricultural Engineer from Nepal, working on precision irrigation, farm machinery and post-harvest systems that help farmers to move beyond subsistence.',
   tagline: 'Engineering water-smart, data-driven systems for resilient farms.',
   location: 'Seeking MSc opportunities',
   email: 'shekharpoudel42932@gmail.com',
@@ -40,8 +40,9 @@ export const socials: Social[] = [
 ];
 
 export const stats = [
-  { value: 2, suffix: '+', label: 'Years in the field' },
+  { value: 3, suffix: '+', label: 'Years in the field' },
   { value: 800, suffix: ' ha', label: 'Land under supported irrigation' },
+  { value: 3, suffix: ' ', label: 'Organizations worked with' },
   { value: 13, suffix: '', label: 'Engineering projects delivered' },
 ];
 
@@ -57,7 +58,7 @@ export const expertise = [
   'Agri-data analytics',
 ];
 
-export const tools = ['AutoCAD', 'SolidWorks', 'QGIS', 'ArcGIS', 'Python', 'R', 'CROPWAT', 'AquaCrop', 'HEC-RAS', 'MODFLOW'];
+export const tools = ['AutoCAD', 'QGIS', 'ArcGIS', 'Python', 'R', 'CROPWAT', 'AquaCrop', 'PVsyst', 'MODFLOW'];
 
 /** Items per page on paginated listings */
 export const pageSize = {
