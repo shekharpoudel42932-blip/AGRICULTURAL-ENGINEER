@@ -11,7 +11,7 @@ export const site = {
   role: 'Agricultural Engineer',
   title: 'Shekhar | Agricultural Engineer',
   description:
-    'Hi, I am Shekhar Poudel, an Agricultural Engineer from Nepal, working on precision irrigation, farm machinery and post-harvest systems that help farmers to move beyond subsistence.',
+    'Hi, its me Shekhar, an Agricultural Engineer from Nepal, working on precision irrigation, farm machinery and post-harvest systems that help farmers to move beyond subsistence.',
   tagline: 'Engineering water-smart, data-driven systems for resilient farms.',
   location: 'Seeking MSc opportunities',
   email: 'shekharpoudel42932@gmail.com',
