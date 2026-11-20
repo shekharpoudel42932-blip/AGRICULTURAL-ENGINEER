@@ -11,7 +11,7 @@ order: 3
 cover: ../../assets/covers/Kobo survey.jpeg
 coverAlt: "Collecting farmers experiences on subsidized shallow tube well irrigation scheme"
 gallery:
-  - { src: ../../assets/covers/Groundfed irrigation.jpeg, alt: Commercial potato cultivation using shallow tube well, caption: "A farmers field underirrigation in Hirminiya, Duduwa,Banke" }
+  - { src: ../../assets/covers/Groundfed irrigation.jpeg, alt: Commercial potato cultivation using shallow tube well, caption: "A farmer's field under ground-fed irrigation in Hirminiya, Duduwa,Banke" }
   - { src: ../../assets/covers/Pumping.jpeg, alt: Diesel engine powered pumpset after irrigating 1 ha land in Narainapur, caption: "Me with a farmer and his pumping equipment, Banke" }
   - { src: ../../assets/covers/Interaction.jpeg, alt: Farmers and Agriculture knowledge center interaction program with indigenous Muktakamaiya community in Baijanath Municipality, caption: "Gathering farmers opinion and providing essential suggestions and assitance" }
   - { src: ../../assets/covers/Cauliflower Cultivation.jpeg, alt: Farm under the subsidy scheme with cauliflower at flowering stage, caption: "A success story of a low cost irrigation scheme helping a farmers family to sustain their livelihood" }
