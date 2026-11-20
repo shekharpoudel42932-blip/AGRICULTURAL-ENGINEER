@@ -8,7 +8,7 @@ status: research
 tags: [Solar PV, PVSyst, Techno-Economic Assessment, Environmental Assessment, Nepal]
 pattern: grid
 featured: true
-order: 2
+order: 3
 cover: ../../assets/covers/Sunpath.jpg
 coverAlt: "Tracking of Sun direction"
 metrics:

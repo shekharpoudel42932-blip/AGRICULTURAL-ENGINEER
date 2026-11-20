@@ -7,7 +7,7 @@ location: Banke, Nepal
 status: completed
 tags: [Irrigation, Field survey, KoboToolbox, Banke, Terai district]
 pattern: rows
-order: 3
+order: 1
 cover: ../../assets/covers/Kobo survey.jpeg
 coverAlt: "Collecting farmers experiences on subsidized shallow tube well irrigation scheme"
 gallery:
