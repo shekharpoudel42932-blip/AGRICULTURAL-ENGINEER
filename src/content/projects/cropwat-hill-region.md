@@ -8,7 +8,7 @@ status: research
 tags: [Irrigation, Crop-water modelling, CROPWAT, SPAW, NASA Power tool]
 pattern: contours
 featured: true
-order: 1
+order: 2
 cover: ../../assets/covers/Studyarea.jpg
 coverAlt: "Illustration of green terraces on a hillside"
 metrics:
